@@ -1,0 +1,11 @@
+<design:component label="HMS 60-40 Custom Layout">
+    <flexipage:template>
+        <flexipage:region name="header" defaultWidth="LARGE" />
+        <flexipage:region name="left" defaultWidth="MEDIUM" />
+        <flexipage:region name="right" defaultWidth="MEDIUM" />
+    </flexipage:template>
+    <design:supportedFormFactors>
+        <design:supportedFormFactor type="Large" />
+        <design:supportedFormFactor type="Small" />
+    </design:supportedFormFactors>
+</design:component>

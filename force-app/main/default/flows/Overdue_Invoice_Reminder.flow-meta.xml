@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Email_Reminder</name>
+        <label>Send Email Reminder to Patient</label>
+        <locationX>176</locationX>
+        <locationY>480</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Send_SMS_Reminder</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>varCurrentPatient.Email__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Overdue Invoice Reminder — {!varCurrentInvoice.Name}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>varEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_SMS_Reminder</name>
+        <label>Send SMS Reminder</label>
+        <locationX>176</locationX>
+        <locationY>600</locationY>
+        <actionName>OverdueInvoiceSmsHandler</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Loop_Overdue_Invoices</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>dueDate</name>
+            <value>
+                <elementReference>varCurrentInvoice.Due_Date__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>invoiceAmount</name>
+            <value>
+                <elementReference>varCurrentInvoice.Total_Amount__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>invoiceNumber</name>
+            <value>
+                <elementReference>varCurrentInvoice.Name</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>patientName</name>
+            <value>
+                <elementReference>varCurrentPatient.Name</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>phoneNumber</name>
+            <value>
+                <elementReference>varCurrentPatient.Phone__c</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>OverdueInvoiceSmsHandler</nameSegment>
+    </actionCalls>
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Build_Email_Body</name>
+        <label>Build Reminder Email Body</label>
+        <locationX>176</locationX>
+        <locationY>360</locationY>
+        <assignmentItems>
+            <assignToReference>varEmailBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Dear {!varCurrentPatient.Name},
+
+This is a reminder that your hospital invoice is overdue.
+
+Invoice Number : {!varCurrentInvoice.Name}
+Amount Due     : {!varCurrentInvoice.Total_Amount__c}
+Due Date       : {!varCurrentInvoice.Due_Date__c}
+
+Please contact the billing department to settle your account.
+
+Hospital Management Team</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_Reminder</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Patient_Contact_Exists</name>
+        <label>Patient Contact Info Exists?</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Overdue_Invoices</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Contact — Skip</defaultConnectorLabel>
+        <rules>
+            <name>Has_Contact</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>varCurrentPatient.Email__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>varCurrentPatient.Phone__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Build_Email_Body</targetReference>
+            </connector>
+            <label>Contact Available — Notify</label>
+        </rules>
+    </decisions>
+    <description>Scheduled Flow that runs daily at 9:00 AM. Queries all Invoice__c records where Status = Unpaid and Due_Date__c is before today (overdue). For each overdue invoice, sends an email reminder to the patient and triggers an SMS notification via the OverdueInvoiceSmsHandler Apex invocable action.</description>
+    <interviewLabel>Overdue Invoice Reminder {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Overdue Invoice Reminder</label>
+    <loops>
+        <name>Loop_Overdue_Invoices</name>
+        <label>Loop Overdue Invoices</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <assignNextValueToReference>varCurrentInvoice</assignNextValueToReference>
+        <collectionReference>varOverdueInvoices</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Get_Patient_For_Invoice</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Overdue_Invoices</name>
+        <label>Get Overdue Unpaid Invoices</label>
+        <locationX>176</locationX>
+        <locationY>60</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Overdue_Invoices</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Unpaid</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Due_Date__c</field>
+            <operator>LessThan</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </filters>
+        <object>Invoice__c</object>
+        <outputReference>varOverdueInvoices</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Due_Date__c</queriedFields>
+        <queriedFields>Total_Amount__c</queriedFields>
+        <queriedFields>Patient__c</queriedFields>
+        <sortField>Due_Date__c</sortField>
+        <sortOrder>Asc</sortOrder>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Patient_For_Invoice</name>
+        <label>Get Patient for Invoice</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Patient_Contact_Exists</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>varCurrentInvoice.Patient__c</elementReference>
+            </value>
+        </filters>
+        <object>Patient__c</object>
+        <outputReference>varCurrentPatient</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Email__c</queriedFields>
+        <queriedFields>Phone__c</queriedFields>
+    </recordLookups>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Overdue_Invoices</targetReference>
+        </connector>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2026-06-18</startDate>
+            <startTime>09:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varCurrentInvoice</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Invoice__c</objectType>
+    </variables>
+    <variables>
+        <name>varCurrentPatient</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Patient__c</objectType>
+    </variables>
+    <variables>
+        <name>varEmailBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varOverdueInvoices</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Invoice__c</objectType>
+    </variables>
+</Flow>

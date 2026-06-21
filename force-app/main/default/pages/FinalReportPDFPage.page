@@ -1,0 +1,410 @@
+<apex:page controller="FinalReportPdfController" renderAs="pdf" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false">
+<html>
+<head>
+    <style type="text/css">
+        @page {
+            size: letter;
+            margin: 0.6in 0.6in 0.8in 0.6in;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'Arial', 'Helvetica', sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+            @bottom-left {
+                content: "HMS Hospital Management System - Final Medical Report";
+                font-family: 'Arial', 'Helvetica', sans-serif;
+                font-size: 8pt;
+                color: #64748b;
+            }
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 10pt;
+            color: #1e293b;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 20pt;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-top: 15pt;
+            margin-bottom: 8pt;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Table Layouts */
+        table.full-width {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12pt;
+        }
+        
+        table.info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10pt;
+        }
+        
+        table.info-table td {
+            padding: 4px 8px;
+            vertical-align: top;
+        }
+        
+        table.info-table td.label {
+            font-weight: bold;
+            color: #475569;
+            width: 180px;
+        }
+        
+        table.info-table td.value {
+            color: #0f172a;
+        }
+        
+        /* Data Tables */
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12pt;
+        }
+        
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: bold;
+            text-align: left;
+            padding: 6px 10px;
+            border-bottom: 2px solid #cbd5e1;
+            font-size: 9pt;
+            text-transform: uppercase;
+        }
+        
+        table.data-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 9.5pt;
+        }
+        
+        table.data-table tr.total-row td {
+            font-weight: bold;
+            background-color: #f8fafc;
+            border-top: 1.5px solid #cbd5e1;
+            border-bottom: 2px double #94a3b8;
+        }
+        
+        /* Cross Logo Table */
+        table.cross-logo {
+            width: 45px;
+            height: 45px;
+            border-collapse: collapse;
+        }
+        
+        table.cross-logo td {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .header-container {
+            border-bottom: 3px solid #0284c7;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-note {
+            margin-top: 25pt;
+            text-align: center;
+            font-size: 9pt;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header-container">
+        <table class="full-width">
+            <tr>
+                <!-- Big Hospital Icon -->
+                <td style="width: 60px; vertical-align: middle;">
+                    <table class="cross-logo">
+                        <tr>
+                            <td style="width: 15px; height: 15px;"></td>
+                            <td style="width: 15px; height: 15px; background-color: #0284c7;"></td>
+                            <td style="width: 15px; height: 15px;"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15px; height: 15px; background-color: #0284c7;"></td>
+                            <td style="width: 15px; height: 15px; background-color: #0284c7;"></td>
+                            <td style="width: 15px; height: 15px; background-color: #0284c7;"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15px; height: 15px;"></td>
+                            <td style="width: 15px; height: 15px; background-color: #0284c7;"></td>
+                            <td style="width: 15px; height: 15px;"></td>
+                        </tr>
+                    </table>
+                </td>
+                <!-- Header Text -->
+                <td style="vertical-align: middle; padding-left: 15px;">
+                    <h1 style="color: #0284c7; font-size: 22pt; margin: 0;">HMS FINAL MEDICAL REPORT</h1>
+                    <span style="font-size: 9pt; color: #64748b; font-weight: bold; text-transform: uppercase;">
+                        Report: {!report.Name} &nbsp;|&nbsp; Date: <apex:outputText value="{0,date,dd-MMM-yyyy}"><apex:param value="{!TODAY()}"/></apex:outputText>
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Patient Details -->
+    <h2>Patient Information</h2>
+    <table class="info-table">
+        <tr>
+            <td class="label">Patient Name:</td>
+            <td class="value">{!patient.Name}</td>
+            <td class="label">Patient ID:</td>
+            <td class="value">{!patient.Patient_ID__c}</td>
+        </tr>
+        <tr>
+            <td class="label">Gender:</td>
+            <td class="value">{!patient.Gender__c}</td>
+            <td class="label">Blood Group:</td>
+            <td class="value">{!patient.Blood_Group__c}</td>
+        </tr>
+        <tr>
+            <td class="label">Phone:</td>
+            <td class="value">{!patient.Phone__c}</td>
+            <td class="label">Email:</td>
+            <td class="value">{!patient.Email__c}</td>
+        </tr>
+    </table>
+
+    <!-- Admission Details -->
+    <apex:outputPanel rendered="{!hasAdmission}">
+        <h2>Admission Details</h2>
+        <table class="info-table">
+            <tr>
+                <td class="label">Admission No:</td>
+                <td class="value">{!admission.Name}</td>
+                <td class="label">Diagnosis:</td>
+                <td class="value">{!admission.Diagnosis__c}</td>
+            </tr>
+            <tr>
+                <td class="label">Admission Date:</td>
+                <td class="value">
+                    <apex:outputText value="{0,date,dd-MMM-yyyy HH:mm}">
+                        <apex:param value="{!admission.Admission_Date_Time__c}"/>
+                    </apex:outputText>
+                </td>
+                <td class="label">Discharge Date:</td>
+                <td class="value">
+                    <apex:outputText value="{0,date,dd-MMM-yyyy HH:mm}">
+                        <apex:param value="{!admission.Actual_Discharge_Date_Time__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Room / Bed:</td>
+                <td class="value">{!admission.Room__r.Name} / {!admission.Bed__r.Name}</td>
+                <td class="label">Treating Doctor:</td>
+                <td class="value">{!report.Doctor__r.Name}</td>
+            </tr>
+        </table>
+    </apex:outputPanel>
+
+    <!-- Appointment Details -->
+    <apex:outputPanel rendered="{!AND(hasAppointment, NOT(hasAdmission))}">
+        <h2>Appointment Details</h2>
+        <table class="info-table">
+            <tr>
+                <td class="label">Appointment No:</td>
+                <td class="value">{!appointment.Name}</td>
+                <td class="label">Doctor:</td>
+                <td class="value">{!appointment.Doctor__r.Name}</td>
+            </tr>
+            <tr>
+                <td class="label">Date / Time:</td>
+                <td class="value">
+                    <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                        <apex:param value="{!appointment.Appointment_Date__c}"/>
+                    </apex:outputText>
+                    &nbsp; {!appointment.Appointment_Time__c}
+                </td>
+                <td class="label">Department:</td>
+                <td class="value">{!appointment.Department__r.Name}</td>
+            </tr>
+            <tr>
+                <td class="label">Symptoms:</td>
+                <td class="value" colspan="3">{!appointment.Symptoms__c}</td>
+            </tr>
+        </table>
+    </apex:outputPanel>
+
+    <!-- Lab Results -->
+    <apex:outputPanel rendered="{!hasLabs}">
+        <h2>Laboratory Investigations</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Test Name</th>
+                    <th style="width: 40%;">Result Summary</th>
+                    <th style="width: 20%;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!labResults}" var="lab">
+                    <tr>
+                        <td>{!lab.Lab_Test__r.Name}</td>
+                        <td>{!lab.Result_Summary__c}</td>
+                        <td>{!lab.Status__c}</td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+    </apex:outputPanel>
+
+    <!-- Prescriptions -->
+    <apex:outputPanel rendered="{!hasPrescriptions}">
+        <h2>Prescribed Medications</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 35%;">Medicine</th>
+                    <th style="width: 20%;">Dosage</th>
+                    <th style="width: 25%;">Frequency</th>
+                    <th style="width: 20%;">Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!prescriptionLineItems}" var="item">
+                    <tr>
+                        <td><strong>{!item.medicineName}</strong></td>
+                        <td>{!item.dosage}</td>
+                        <td>{!item.frequency}</td>
+                        <td>
+                            <apex:outputText value="{0,number,0} Days">
+                                <apex:param value="{!item.durationDays}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+    </apex:outputPanel>
+
+    <!-- Financial Invoice Details -->
+    <apex:outputPanel rendered="{!hasInvoice}">
+        <h2>Billing and Invoice Statement ({!invoice.Name})</h2>
+        
+        <!-- Line Items -->
+        <apex:outputPanel rendered="{!hasInvoiceLineItems}">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45%;">Description</th>
+                        <th style="width: 15%; text-align: center;">Qty</th>
+                        <th style="width: 20%; text-align: right;">Unit Price (INR)</th>
+                        <th style="width: 20%; text-align: right;">Total Price (INR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!formattedInvoiceLineItems}" var="line">
+                        <tr>
+                            <td>{!line.description}</td>
+                            <td style="text-align: center;">
+                                <apex:outputText value="{0,number,0}">
+                                    <apex:param value="{!line.quantity}"/>
+                                </apex:outputText>
+                            </td>
+                            <td style="text-align: right;">{!line.unitPriceInr}</td>
+                            <td style="text-align: right;">{!line.lineTotalInr}</td>
+                        </tr>
+                    </apex:repeat>
+                </tbody>
+            </table>
+        </apex:outputPanel>
+
+        <!-- Summary Totals -->
+        <table style="width: 40%; margin-left: 60%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 4px; font-weight: bold; color: #475569;">Gross Bill Amount:</td>
+                <td style="padding: 4px; text-align: right; font-weight: bold;">{!grossInr}</td>
+            </tr>
+            <tr>
+                <td style="padding: 4px; color: #475569;">Insurance Coverage:</td>
+                <td style="padding: 4px; text-align: right; color: #dc2626;">- {!insuranceInr}</td>
+            </tr>
+            <tr>
+                <td style="padding: 4px; color: #475569;">Patient Discount:</td>
+                <td style="padding: 4px; text-align: right; color: #dc2626;">- {!discountInr}</td>
+            </tr>
+            <apex:outputPanel layout="none" rendered="{!invoice.Non_Billable_Deduction__c > 0}">
+                <tr>
+                    <td style="padding: 4px; color: #475569;">Non-Billable Deductions:</td>
+                    <td style="padding: 4px; text-align: right; color: #dc2626;">- {!nonBillableInr}</td>
+                </tr>
+            </apex:outputPanel>
+            <tr style="border-top: 1.5px solid #cbd5e1;">
+                <td style="padding: 6px 4px; font-weight: bold; color: #0284c7; font-size: 11pt;">Net Payable:</td>
+                <td style="padding: 6px 4px; text-align: right; font-weight: bold; color: #0284c7; font-size: 11pt;">{!netPayableInr}</td>
+            </tr>
+            <tr>
+                <td style="padding: 4px; font-size: 9pt; color: #64748b;">Payment Status:</td>
+                <td style="padding: 4px; text-align: right; font-weight: bold; font-size: 9pt; text-transform: uppercase;">{!invoice.Payment_Status__c}</td>
+            </tr>
+        </table>
+    </apex:outputPanel>
+
+    <!-- Summary & Discharge Advice -->
+    <apex:outputPanel rendered="{!OR(NOT(ISBLANK(report.Summary__c)), NOT(ISBLANK(report.Discharge_Advice__c)))}">
+        <h2>Clinical Summary &amp; discharge instructions</h2>
+        <table class="full-width" style="margin-top: 5px;">
+            <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(report.Summary__c))}">
+                <tr>
+                    <td style="padding-bottom: 10px;">
+                        <strong style="color: #475569; display: block; margin-bottom: 2px;">Case Summary:</strong>
+                        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 4px;">
+                            {!report.Summary__c}
+                        </div>
+                    </td>
+                </tr>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(report.Discharge_Advice__c))}">
+                <tr>
+                    <td>
+                        <strong style="color: #475569; display: block; margin-bottom: 2px;">Discharge Advice / Recommendations:</strong>
+                        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 4px;">
+                            {!report.Discharge_Advice__c}
+                        </div>
+                    </td>
+                </tr>
+            </apex:outputPanel>
+        </table>
+    </apex:outputPanel>
+
+    <div class="footer-note">
+        Thank you for choosing our hospital. We wish you a speedy recovery.<br/>
+        <em>This is a system generated medical report.</em>
+    </div>
+
+</body>
+</html>
+</apex:page>

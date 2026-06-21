@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Provide a list of active accepted insurance companies and answer questions about hospital location, contact numbers, timings, and ambulance numbers.</description>
+    <developerName>p_16jg5000000dMNF_Insurance_and_Hospital_Information</developerName>
+    <genAiFunctions>
+        <functionName>PH_Create_Ticket_Once</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>PH_Hospital_Directory</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the query is about active insurance companies, list the accepted ones.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the query is about hospital location, timings, or contact numbers, provide the approved information.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Do not share any patient-specific or confidential data.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Before answering the first substantive question, call Create Patient Helpdesk Ticket Once with the original first question, category General, optional authenticated patient Id, and RoutableId as conversationKey. Never call it again after it reports created or already existed.</description>
+        <developerName>instruction_3</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_3</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Call Patient Helpdesk Hospital Directory with requestType Insurance for accepted companies. For location, contact, timings, or ambulance use requestType Hospital Info and the matching informationType. Use only the action answer.</description>
+        <developerName>instruction_4</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_4</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jg5000000dMNF_Insurance_and_Hospital_Information</localDeveloperName>
+    <masterLabel>Insurance and Hospital Information</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only list active accepted insurance companies and provide hospital location, contact numbers, timings, and ambulance numbers using approved configurable hospital information. You cannot provide patient-specific or internal data.</scope>
+</GenAiPlugin>

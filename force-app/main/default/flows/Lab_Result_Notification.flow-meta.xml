@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Doctor_Notification</name>
+        <label>Send Email to Doctor</label>
+        <locationX>176</locationX>
+        <locationY>720</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Patient_Email_Exists</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>varDoctorEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Lab Result Available — {!$Record.Name}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>varDoctorEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Patient_Notification</name>
+        <label>Send Email to Patient</label>
+        <locationX>176</locationX>
+        <locationY>840</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Update_Admission_Status</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>varPatient.Email__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Your Lab Results Are Available</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>varPatientEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Build_Doctor_Email_Body</name>
+        <label>Build Doctor Email Body</label>
+        <locationX>176</locationX>
+        <locationY>600</locationY>
+        <assignmentItems>
+            <assignToReference>varDoctorEmailBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Dear Doctor,
+
+A new lab result has been uploaded for your patient.
+
+Patient     : {!varPatient.Name}
+Admission   : {!varAdmission.Name}
+Result      : {!$Record.Result_Summary__c}
+Status      : {!$Record.Status__c}
+
+Please review the result at your earliest convenience.
+
+Hospital Management System</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Doctor_Notification</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Build_Patient_Email_Body</name>
+        <label>Build Patient Email Body</label>
+        <locationX>176</locationX>
+        <locationY>720</locationY>
+        <assignmentItems>
+            <assignToReference>varPatientEmailBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Dear {!varPatient.Name},
+
+Your lab results are now available.
+
+Result Summary : {!$Record.Result_Summary__c}
+Admission      : {!varAdmission.Name}
+
+Please contact your doctor for interpretation and next steps.
+
+Warm regards,
+Hospital Management Team</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Patient_Notification</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Doctor_Email</name>
+        <label>Set Doctor Email from Staff</label>
+        <locationX>176</locationX>
+        <locationY>480</locationY>
+        <assignmentItems>
+            <assignToReference>varDoctorEmail</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>varDoctorStaff.Email__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Doctor_Email_Exists</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Check_Admission_Exists</name>
+        <label>Admission Linked?</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <defaultConnectorLabel>No Admission — End</defaultConnectorLabel>
+        <rules>
+            <name>Admission_Present</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Admission__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Admission_Record</targetReference>
+            </connector>
+            <label>Admission Present</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Doctor_Email_Exists</name>
+        <label>Doctor Email Exists?</label>
+        <locationX>176</locationX>
+        <locationY>600</locationY>
+        <defaultConnector>
+            <targetReference>Patient_Email_Exists</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Doctor Email — Skip</defaultConnectorLabel>
+        <rules>
+            <name>Has_Doctor_Email</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varDoctorEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Build_Doctor_Email_Body</targetReference>
+            </connector>
+            <label>Doctor Email Available</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Patient_Email_Exists</name>
+        <label>Patient Email Exists?</label>
+        <locationX>176</locationX>
+        <locationY>720</locationY>
+        <defaultConnector>
+            <targetReference>Update_Admission_Status</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Patient Email — Skip</defaultConnectorLabel>
+        <rules>
+            <name>Has_Patient_Email</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varPatient.Email__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Build_Patient_Email_Body</targetReference>
+            </connector>
+            <label>Patient Email Available</label>
+        </rules>
+    </decisions>
+    <description>After Create flow on Lab_Result__c. When a lab result is uploaded: fetches the related Admission, Doctor, and Patient; sends notification emails to both Doctor and Patient; and updates the Admission Status to Lab Results Available.</description>
+    <interviewLabel>Lab Result Notification {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Lab Result Notification</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Admission_Record</name>
+        <label>Get Admission Record</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Patient_Record</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Admission__c</elementReference>
+            </value>
+        </filters>
+        <object>Admission__c</object>
+        <outputReference>varAdmission</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Doctor__c</queriedFields>
+        <queriedFields>Patient__c</queriedFields>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Doctor_Record</name>
+        <label>Get Doctor Record</label>
+        <locationX>176</locationX>
+        <locationY>480</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Staff_For_Doctor</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>varAdmission.Doctor__c</elementReference>
+            </value>
+        </filters>
+        <object>Doctor__c</object>
+        <outputReference>varDoctor</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Staff__c</queriedFields>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Patient_Record</name>
+        <label>Get Patient Record</label>
+        <locationX>176</locationX>
+        <locationY>360</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Doctor_Record</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>varAdmission.Patient__c</elementReference>
+            </value>
+        </filters>
+        <object>Patient__c</object>
+        <outputReference>varPatient</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Email__c</queriedFields>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Staff_For_Doctor</name>
+        <label>Get Staff Record for Doctor</label>
+        <locationX>176</locationX>
+        <locationY>540</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Set_Doctor_Email</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>varDoctor.Staff__c</elementReference>
+            </value>
+        </filters>
+        <object>Staff__c</object>
+        <outputReference>varDoctorStaff</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Email__c</queriedFields>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Admission_Status</name>
+        <label>Update Admission Status</label>
+        <locationX>176</locationX>
+        <locationY>960</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>varAdmission.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Lab Results Available</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Admission__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_Admission_Exists</targetReference>
+        </connector>
+        <object>Lab_Result__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+    <variables>
+        <name>varAdmission</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Admission__c</objectType>
+    </variables>
+    <variables>
+        <name>varDoctor</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Doctor__c</objectType>
+    </variables>
+    <variables>
+        <name>varDoctorEmail</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varDoctorEmailBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varDoctorStaff</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Staff__c</objectType>
+    </variables>
+    <variables>
+        <name>varPatient</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Patient__c</objectType>
+    </variables>
+    <variables>
+        <name>varPatientEmailBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

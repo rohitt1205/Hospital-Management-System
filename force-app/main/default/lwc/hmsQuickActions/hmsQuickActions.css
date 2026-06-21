@@ -1,0 +1,193 @@
+/* ── HMS Quick Actions ───────────────────────────────────────────────────── */
+
+:host { display: block; }
+
+.qa-wrapper {
+    background: linear-gradient(160deg, #0d1b2e 0%, #112240 100%);
+    border-radius: 20px;
+    padding: 24px 28px;
+    box-shadow: 0 12px 40px rgba(0,20,60,0.45);
+    height: 100%;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.qa-header {
+    margin-bottom: 22px;
+}
+
+.qa-header-icon {
+    --lwc-colorTextIconDefault: #63b3ed;
+    margin-bottom: 6px;
+}
+
+.qa-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+}
+
+.qa-subtitle {
+    font-size: 0.78rem;
+    color: #7fa8d0;
+    margin: 0;
+}
+
+/* ── Grid ────────────────────────────────────────────────────────────────── */
+.qa-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+.qa-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-radius: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.22s;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.qa-card:hover {
+    transform: translateX(6px) scale(1.01);
+}
+
+.qa-appointment { background: linear-gradient(135deg, rgba(21,101,192,0.3), rgba(30,136,229,0.2)); }
+.qa-admission   { background: linear-gradient(135deg, rgba(0,105,92,0.3),   rgba(0,137,123,0.2)); }
+.qa-bed         { background: linear-gradient(135deg, rgba(46,125,50,0.3),  rgba(67,160,71,0.2)); }
+.qa-invoice     { background: linear-gradient(135deg, rgba(69,39,160,0.3),  rgba(123,31,162,0.2)); }
+
+.qa-appointment:hover { box-shadow: 0 6px 24px rgba(30,136,229,0.35); border-color: rgba(30,136,229,0.4); }
+.qa-admission:hover   { box-shadow: 0 6px 24px rgba(0,137,123,0.35);  border-color: rgba(0,137,123,0.4); }
+.qa-bed:hover         { box-shadow: 0 6px 24px rgba(67,160,71,0.35);  border-color: rgba(67,160,71,0.4); }
+.qa-invoice:hover     { box-shadow: 0 6px 24px rgba(123,31,162,0.35); border-color: rgba(123,31,162,0.4); }
+
+.qa-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.qa-card-body {
+    flex: 1;
+}
+
+.qa-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 3px;
+}
+
+.qa-card-desc {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.4;
+}
+
+.qa-card-arrow {
+    --lwc-colorTextIconDefault: rgba(255,255,255,0.4);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.qa-card:hover .qa-card-arrow {
+    transform: translateX(4px);
+    --lwc-colorTextIconDefault: rgba(255,255,255,0.9);
+}
+
+/* Animated pulse on hover */
+.qa-card-pulse {
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    pointer-events: none;
+    transition: transform 0.3s;
+}
+
+.qa-card:hover .qa-card-pulse {
+    transform: scale(2.5);
+}
+
+/* ── Flow Modal ──────────────────────────────────────────────────────────── */
+.flow-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 10, 30, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.flow-modal {
+    background: #0d1f3c;
+    border-radius: 20px;
+    width: 720px;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    border: 1px solid rgba(99,179,237,0.15);
+    animation: slideUp 0.25s cubic-bezier(.34,1.56,.64,1);
+    overflow: hidden;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(40px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.flow-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(99,179,237,0.12);
+    background: rgba(255,255,255,0.03);
+}
+
+.flow-modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.flow-close-btn {
+    --lwc-colorBorderBare: transparent;
+}
+
+.flow-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* Override flow content color for dark modal */
+.flow-modal-body lightning-flow {
+    --lwc-colorBackground: transparent;
+    --lwc-colorBackgroundBodySmall: rgba(255,255,255,0.05);
+}

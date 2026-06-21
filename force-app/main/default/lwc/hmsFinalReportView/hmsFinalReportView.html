@@ -1,0 +1,316 @@
+<template>
+    <div class="report-wrapper slds-card">
+        <!-- HEADER / ACTIONS BAR -->
+        <div class="report-actions no-print">
+            <div class="actions-left">
+                <lightning-icon icon-name="standard:service_report" size="medium" class="report-icon"></lightning-icon>
+                <div>
+                    <h1 class="report-title-top">Final Medical Report</h1>
+                    <p class="report-subtitle-top">Clinical & Billing Summary</p>
+                </div>
+            </div>
+            <div class="actions-right">
+                <lightning-button
+                    label="Send Final Report"
+                    icon-name="utility:chat"
+                    variant="brand"
+                    onclick={handleSendWhatsApp}
+                    disabled={isSending}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button
+                    label="Print Report"
+                    icon-name="utility:print"
+                    variant="neutral"
+                    onclick={handlePrint}
+                    disabled={printDisabled}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- MAIN REPORT LAYOUT -->
+        <template if:true={isLoading}>
+            <div class="slds-p-around_large slds-align_absolute-center">
+                <lightning-spinner alternative-text="Loading report data..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-around_large" role="alert">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+            <template if:true={hasReport}>
+                <div class="print-container">
+                    
+                    <!-- CLINIC LETTERHEAD -->
+                    <div class="letterhead">
+                        <div class="letterhead-logo">
+                            <lightning-icon icon-name="custom:custom94" size="large" class="logo-icon"></lightning-icon>
+                            <span class="hospital-name">HMS Medical Center</span>
+                        </div>
+                        <div class="letterhead-details">
+                            <p>123 Healthcare Boulevard, Medical District</p>
+                            <p>Phone: +91 99101 54408 | Email: support@hmsmedical.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+
+                    <!-- REPORT TITLE & STATUS -->
+                    <div class="report-header-sec">
+                        <span class="report-no">REPORT #: {reportData.report.Name}</span>
+                        <span class={statusClass}>{reportData.report.Status__c}</span>
+                    </div>
+
+                    <!-- PATIENT DEMOGRAPHICS -->
+                    <template if:true={hasPatient}>
+                        <div class="section-title">👤 Patient Demographics</div>
+                        <div class="demographics-grid">
+                            <div class="grid-item">
+                                <span class="label">Patient Name:</span>
+                                <span class="value">{reportData.patient.Name}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Patient ID:</span>
+                                <span class="value">{reportData.patient.Patient_ID__c}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Gender:</span>
+                                <span class="value">{reportData.patient.Gender__c}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Blood Group:</span>
+                                <span class="value">{reportData.patient.Blood_Group__c}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Phone:</span>
+                                <span class="value">{reportData.patient.Phone__c}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Email:</span>
+                                <span class="value">{reportData.patient.Email__c}</span>
+                            </div>
+                            <div class="grid-item full-width">
+                                <span class="label">Address:</span>
+                                <span class="value">{reportData.patient.Address__c}</span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- APPOINTMENT DETAILS -->
+                    <template if:true={hasAppointment}>
+                        <div class="section-title">📅 Appointment Details</div>
+                        <div class="info-grid">
+                            <div class="grid-item">
+                                <span class="label">Appointment No:</span>
+                                <span class="value">{reportData.appointment.Name}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Date:</span>
+                                <span class="value">{reportData.appointment.Appointment_Date__c}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Time:</span>
+                                <span class="value">{reportData.appointment.Appointment_Time__c}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Appointed Doctor:</span>
+                                <span class="value">{appointmentDoctorName}</span>
+                            </div>
+                            <div class="grid-item full-width">
+                                <span class="label">Reason / Symptoms:</span>
+                                <span class="value">{reportData.appointment.Symptoms__c}</span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ADMISSION & DISCHARGE DETAILS -->
+                    <template if:true={hasAdmission}>
+                        <div class="section-title">🏥 Admission & Discharge Details</div>
+                        <div class="info-grid">
+                            <div class="grid-item">
+                                <span class="label">Admission ID:</span>
+                                <span class="value">{reportData.admission.Name}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Admission Date:</span>
+                                <span class="value">
+                                    <lightning-formatted-date-time value={reportData.admission.Admission_Date_Time__c} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                                </span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Discharge Date:</span>
+                                <span class="value">
+                                    <template if:true={reportData.admission.Actual_Discharge_Date_Time__c}>
+                                        <lightning-formatted-date-time value={reportData.admission.Actual_Discharge_Date_Time__c} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                                    </template>
+                                    <template if:false={reportData.admission.Actual_Discharge_Date_Time__c}>
+                                        <span class="pending-text">Still Admitted</span>
+                                    </template>
+                                </span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Treating Doctor:</span>
+                                <span class="value">{treatingDoctorName}</span>
+                            </div>
+                            <div class="grid-item">
+                                <span class="label">Room / Bed:</span>
+                                <span class="value">{roomName} / {bedName}</span>
+                            </div>
+                            <div class="grid-item full-width">
+                                <span class="label">Primary Diagnosis:</span>
+                                <span class="value">{reportData.admission.Diagnosis__c}</span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- LAB TESTS SECTION -->
+                    <template if:true={hasLabs}>
+                        <div class="section-title">🧪 Laboratory Investigations</div>
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Test Name</th>
+                                    <th>Result Summary</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={reportData.labResults} for:item="lab">
+                                    <tr key={lab.Id}>
+                                        <td class="bold-text">{lab.testName}</td>
+                                        <td>{lab.Result_Summary__c}</td>
+                                        <td>
+                                            <span class="badge-status">{lab.Status__c}</span>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+
+                    <!-- PRESCRIPTIONS SECTION -->
+                    <template if:true={hasPrescriptions}>
+                        <div class="section-title">💊 Prescribed Medications</div>
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Medicine Name</th>
+                                    <th>Dosage</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                    <th>Qty</th>
+                                    <th>Instructions / Timings</th>
+                                    <th class="text-right">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={reportData.prescriptionLineItems} for:item="pli">
+                                    <tr key={pli.medicineName}>
+                                        <td class="bold-text">{pli.medicineName}</td>
+                                        <td>{pli.dosage}</td>
+                                        <td>{pli.frequency}</td>
+                                        <td>{pli.durationText}</td>
+                                        <td>{pli.quantity}</td>
+                                        <td>
+                                            <div>{pli.instructionsText}</div>
+                                            <div class="consumption-schedule">
+                                                <template if:true={pli.morning}><span class="timing-badge">Morning</span></template>
+                                                <template if:true={pli.afternoon}><span class="timing-badge">Afternoon</span></template>
+                                                <template if:true={pli.night}><span class="timing-badge">Night</span></template>
+                                                <template if:true={pli.consumption}><span class="schedule-text">({pli.consumption})</span></template>
+                                            </div>
+                                        </td>
+                                        <td class="text-right bold-text">{pli.totalPriceInr}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+
+                    <!-- INVOICE LINE ITEMS -->
+                    <template if:true={hasInvoiceLineItems}>
+                        <div class="section-title">🧾 Hospital Services & Itemized Billing</div>
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Charge Type</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Qty</th>
+                                    <th class="text-right">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={reportData.invoiceLineItems} for:item="item">
+                                    <tr key={item.Id}>
+                                        <td class="bold-text">{item.chargeType}</td>
+                                        <td>{item.description}</td>
+                                        <td class="text-right">{item.unitPriceInr}</td>
+                                        <td class="text-right">{item.Quantity__c}</td>
+                                        <td class="text-right bold-text">{item.lineTotalInr}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+
+                    <!-- BILLING SUMMARY -->
+                    <template if:true={hasInvoice}>
+                        <div class="billing-section">
+                            <div class="billing-header">
+                                <span>BILLING SUMMARY ({reportData.invoice.Name})</span>
+                                <span class={paymentStatusClass}>{reportData.invoice.Payment_Status__c}</span>
+                            </div>
+                            <div class="billing-grid">
+                                <div class="billing-row">
+                                    <span>Gross Total Amount:</span>
+                                    <span>{reportData.invoice.grossAmountInr}</span>
+                                </div>
+                                <div class="billing-row">
+                                    <span>Insurance Coverage:</span>
+                                    <span class="green-text">- {reportData.invoice.insuranceCoveredAmountInr}</span>
+                                </div>
+                                <div class="billing-row">
+                                    <span>Government Subsidy / Discounts:</span>
+                                    <span class="green-text">- {reportData.invoice.discountAmountInr}</span>
+                                </div>
+                                <div class="billing-row">
+                                    <span>Non-Billable Deductions:</span>
+                                    <span class="green-text">- {reportData.invoice.nonBillableDeductionInr}</span>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="billing-row total-row">
+                                    <span>Net Payable Amount:</span>
+                                    <span>{reportData.invoice.netPayableInr}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- CLINICAL NOTES & SIGNATURES -->
+                    <div class="notes-signatures-sec">
+                        <div class="notes-col">
+                            <template if:true={reportData.report.Summary__c}>
+                                <p class="notes-heading">Clinical Summary Notes</p>
+                                <p class="notes-body">{reportData.report.Summary__c}</p>
+                            </template>
+                            <template if:true={reportData.report.Discharge_Advice__c}>
+                                <p class="notes-heading">Discharge Advice</p>
+                                <p class="notes-body">{reportData.report.Discharge_Advice__c}</p>
+                            </template>
+                        </div>
+                        <div class="signature-col">
+                            <div class="signature-line"></div>
+                            <p class="doctor-signature">Authorized Signature</p>
+                            <p class="doctor-subtext">Dr. {treatingDoctorName}</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

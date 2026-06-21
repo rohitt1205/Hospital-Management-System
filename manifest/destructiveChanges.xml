@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Admission__c.Bed__c</members>
+        <members>Bed_Allocation__c.Bed__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>BedTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>Admission_Confirmation_Email</members>
+        <members>Bed_Assignment_On_Admission</members>
+        <members>Emergency_Admission_Processing</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Bed__c-Bed Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Bed__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Bed__c</members>
+        <name>CustomObject</name>
+    </types>
+    <version>67.0</version>
+</Package>

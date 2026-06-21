@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Helps authenticated patients manage outpatient appointments.</description>
+    <localTopicLinks>
+        <genAiPluginName>Patient_Appointment_Management_16jg5000000dJAr</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jg5000000dJAr</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>ambiguous_question_16jg5000000dJAr</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>off_topic_16jg5000000dJAr</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>off_topic_16jg5000000dJAr</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Non-appointment topics.</description>
+        <developerName>off_topic_16jg5000000dJAr</developerName>
+        <genAiPluginInstructions>
+            <description>You are the HMS appointment assistant. Patients book visits by providing department, date, and time.
+Records are created only by calling book_appointment — never by text alone.</description>
+            <developerName>instruction0_179g5000000yIoT</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179g5000000yIoT</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>off_topic</localDeveloperName>
+        <masterLabel>Off Topic</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jg5000000dJAr</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Routes booking requests to Patient Appointment Management.</description>
+        <developerName>agent_router_16jg5000000dJAr</developerName>
+        <genAiPluginInstructions>
+            <description>You are the HMS appointment assistant. Patients book visits by providing department, date, and time.
+Records are created only by calling book_appointment — never by text alone.</description>
+            <developerName>instruction0_179g5000000yIoU</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179g5000000yIoU</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>ambiguous_question_16jg5000000dJAr</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Greetings only.</description>
+        <developerName>ambiguous_question_16jg5000000dJAr</developerName>
+        <genAiPluginInstructions>
+            <description>You are the HMS appointment assistant. Patients book visits by providing department, date, and time.
+Records are created only by calling book_appointment — never by text alone.</description>
+            <developerName>instruction0_179g5000000yIoV</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179g5000000yIoV</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>ambiguous_question</localDeveloperName>
+        <masterLabel>Ambiguous Question</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Patient_Appointment_Management_16jg5000000dJAr</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Creates Appointment__c records via book_appointment when the patient confirms department, date, and time.</description>
+        <developerName>Patient_Appointment_Management_16jg5000000dJAr</developerName>
+        <genAiPluginInstructions>
+            <description>You are the HMS appointment assistant. Patients book visits by providing department, date, and time.
+Records are created only by calling book_appointment — never by text alone.</description>
+            <developerName>instruction0_179g5000000yIoW</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179g5000000yIoW</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>cancel_appointment_179g5000000yIoW</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>book_appointment_179g5000000yIoW</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>reschedule_appointment_179g5000000yIoW</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>list_upcoming_appointments_179g5000000yIoW</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>book_appointment_179g5000000yIoW</fullName>
+            <description>Creates Appointment__c instantly. Required on patient confirm. Inputs: appointmentDate, appointmentTime, departmentName. Never reply with wait/hold text — call this action.</description>
+            <developerName>book_appointment_179g5000000yIoW</developerName>
+            <invocationTarget>AppointmentBookingInvocableBook</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>book_appointment</localDeveloperName>
+            <masterLabel>Book Appointment</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>reschedule_appointment_179g5000000yIoW</fullName>
+            <description>Reschedules an appointment.</description>
+            <developerName>reschedule_appointment_179g5000000yIoW</developerName>
+            <invocationTarget>AppointmentBookingInvocableReschedule</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>reschedule_appointment</localDeveloperName>
+            <masterLabel>Reschedule Appointment</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>cancel_appointment_179g5000000yIoW</fullName>
+            <description>Cancels an appointment.</description>
+            <developerName>cancel_appointment_179g5000000yIoW</developerName>
+            <invocationTarget>AppointmentBookingInvocableCancel</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>cancel_appointment</localDeveloperName>
+            <masterLabel>Cancel Appointment</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>list_upcoming_appointments_179g5000000yIoW</fullName>
+            <description>Lists upcoming appointments.</description>
+            <developerName>list_upcoming_appointments_179g5000000yIoW</developerName>
+            <invocationTarget>AppointmentBookingInvocableListUpcoming</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>list_upcoming_appointments</localDeveloperName>
+            <masterLabel>List Upcoming Appointments</masterLabel>
+        </localActions>
+        <localDeveloperName>Patient_Appointment_Management</localDeveloperName>
+        <masterLabel>Patient Appointment Management</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>HMS Patient Appointment Assistant</masterLabel>
+    <plannerActions>
+        <fullName>AnswerQuestionsWithKnowledge_16jg5000000dJAr</fullName>
+        <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: “What is your return policy?” “How do I fix an issue?” or “What features does a product have?”</description>
+        <developerName>AnswerQuestionsWithKnowledge_16jg5000000dJAr</developerName>
+        <invocationTarget>streamKnowledgeSearch</invocationTarget>
+        <invocationTargetType>standardInvocableAction</invocationTargetType>
+        <isConfirmationRequired>false</isConfirmationRequired>
+        <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+        <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+        <masterLabel>Answer Questions with Knowledge</masterLabel>
+        <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+        <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+    </plannerActions>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>false</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <surface>SurfaceAction__CustomerWebClient</surface>
+        <surfaceType>CustomerWebClient</surfaceType>
+    </plannerSurfaces>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>false</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <surface>SurfaceAction__Messaging</surface>
+        <surfaceType>Messaging</surfaceType>
+    </plannerSurfaces>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

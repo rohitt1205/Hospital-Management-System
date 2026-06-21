@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Creates exactly one Helpdesk Ticket per messaging conversation by invoking the approved HelpDesk Ticket Flow through an idempotent wrapper.</description>
+    <developerName>PH_Create_Ticket_Once</developerName>
+    <invocationTarget>PH_CreateTicketOnceAction</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+    <localDeveloperName>PH_Create_Ticket_Once</localDeveloperName>
+    <masterLabel>Create Patient Helpdesk Ticket Once</masterLabel>
+</GenAiFunction>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>AdmissionEmailHandler</members>
+        <members>DischargeSummaryHandler</members>
+        <members>FacilityAutomationHandler</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Admission_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <version>67.0</version>
+</Package>

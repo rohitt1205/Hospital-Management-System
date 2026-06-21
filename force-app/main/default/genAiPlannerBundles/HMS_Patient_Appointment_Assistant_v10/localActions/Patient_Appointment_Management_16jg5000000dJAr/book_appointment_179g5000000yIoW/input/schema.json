@@ -1,0 +1,70 @@
+{
+  "required" : [ "appointmentDate", "appointmentTime" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "appointmentDate" : {
+      "title" : "Appointment Date",
+      "description" : "YYYY-MM-DD",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "appointmentTime" : {
+      "title" : "Appointment Time",
+      "description" : "morning, afternoon, evening, or HH:MM",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "appointmentType" : {
+      "title" : "Appointment Type",
+      "description" : "Always OPD",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "departmentName" : {
+      "title" : "Department Name",
+      "description" : "e.g. Cardiology",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "doctorId" : {
+      "title" : "Doctor Id",
+      "description" : "Leave blank",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "doctorName" : {
+      "title" : "Doctor Name",
+      "description" : "Leave blank unless specific doctor",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "portalUserId" : {
+      "title" : "Portal User Id",
+      "description" : "Authenticated patient User Id from customerId. Mapped automatically.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "slotLabel" : {
+      "title" : "Slot Label",
+      "description" : "Leave blank",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "symptoms" : {
+      "title" : "Symptoms",
+      "description" : "Optional",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

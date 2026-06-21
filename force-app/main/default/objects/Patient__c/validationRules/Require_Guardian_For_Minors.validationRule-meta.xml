@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Guardian_For_Minors</fullName>
+    <active>true</active>
+    <description>Guardian is required if the patient&apos;s age is less than 18.</description>
+    <errorConditionFormula>NOT(ISBLANK(Date_of_Birth__c)) &amp;&amp; Age__c &lt; 18 &amp;&amp; ISBLANK(Guardian__c)</errorConditionFormula>
+    <errorDisplayField>Guardian__c</errorDisplayField>
+    <errorMessage>Guardian is required for minor patients (under 18 years of age).</errorMessage>
+</ValidationRule>

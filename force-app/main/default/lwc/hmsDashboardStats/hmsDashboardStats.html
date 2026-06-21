@@ -1,0 +1,88 @@
+<template>
+    <div class="hms-stats-wrapper">
+        <!-- Header -->
+        <div class="hms-header">
+            <div class="hms-logo-ring">
+                <lightning-icon icon-name="utility:heart" size="small" class="logo-icon"></lightning-icon>
+            </div>
+            <div class="hms-header-text">
+                <h1 class="hms-title">Hospital Management System</h1>
+                <p class="hms-subtitle">Real-time Overview &bull; {todayLabel}</p>
+            </div>
+            <div class="hms-refresh-btn" onclick={refreshStats} title="Refresh Stats">
+                <lightning-icon icon-name="utility:refresh" size="x-small"></lightning-icon>
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-grid">
+            <!-- Total Patients -->
+            <div class="stat-card stat-blue">
+                <div class="stat-icon-wrap">
+                    <lightning-icon icon-name="standard:patient" size="medium" class="stat-icon"></lightning-icon>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">
+                        <template if:true={isLoading}><div class="skeleton-num"></div></template>
+                        <template if:false={isLoading}>{stats.totalPatients}</template>
+                    </div>
+                    <div class="stat-label">Total Patients</div>
+                </div>
+                <div class="stat-glow"></div>
+            </div>
+
+            <!-- Admissions Today -->
+            <div class="stat-card stat-teal">
+                <div class="stat-icon-wrap">
+                    <lightning-icon icon-name="standard:incident" size="medium" class="stat-icon"></lightning-icon>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">
+                        <template if:true={isLoading}><div class="skeleton-num"></div></template>
+                        <template if:false={isLoading}>{stats.admissionsToday}</template>
+                    </div>
+                    <div class="stat-label">Admissions Today</div>
+                </div>
+                <div class="stat-glow"></div>
+            </div>
+
+            <!-- Available Beds -->
+            <div class="stat-card stat-green">
+                <div class="stat-icon-wrap">
+                    <lightning-icon icon-name="standard:resource_preference" size="medium" class="stat-icon"></lightning-icon>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">
+                        <template if:true={isLoading}><div class="skeleton-num"></div></template>
+                        <template if:false={isLoading}>{stats.availableBeds}</template>
+                    </div>
+                    <div class="stat-label">Available Beds</div>
+                </div>
+                <div class="stat-glow"></div>
+            </div>
+
+            <!-- Appointments Today -->
+            <div class="stat-card stat-purple">
+                <div class="stat-icon-wrap">
+                    <lightning-icon icon-name="standard:event" size="medium" class="stat-icon"></lightning-icon>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">
+                        <template if:true={isLoading}><div class="skeleton-num"></div></template>
+                        <template if:false={isLoading}>{stats.appointmentsToday}</template>
+                    </div>
+                    <div class="stat-label">Appointments Today</div>
+                </div>
+                <div class="stat-glow"></div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <template if:true={hasError}>
+            <div class="hms-error">
+                <lightning-icon icon-name="utility:warning" size="small"></lightning-icon>
+                <span>Unable to load dashboard data. <a onclick={refreshStats}>Retry</a></span>
+            </div>
+        </template>
+    </div>
+</template>

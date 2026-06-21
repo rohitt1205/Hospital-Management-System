@@ -1,0 +1,43 @@
+<template>
+    <lightning-card title="Payment Gateway" icon-name="standard:payment">
+        <div class="slds-p-around_medium">
+            <template if:true={isLoading}>
+                <div class="spinner-container">
+                    <lightning-spinner alt-text="Loading details..." size="medium"></lightning-spinner>
+                </div>
+            </template>
+            
+            <template if:false={isLoading}>
+                <!-- Outstanding Balance Area -->
+                <div class="slds-text-align_center slds-m-bottom_medium outstanding-card">
+                    <div class="slds-text-title_caps outstanding-title">Outstanding Balance</div>
+                    <div class="outstanding-amount">
+                        <lightning-formatted-number 
+                            value={billingDetails.paymentAmount}
+                            format-style="currency" 
+                            currency-code="INR">
+                        </lightning-formatted-number>
+                    </div>
+                    <div class="slds-text-body_small">
+                        Invoice {billingDetails.invoiceName}
+                    </div>
+                </div>
+
+                <template if:true={hasOutstanding}>
+                    <div class="slds-m-top_medium">
+                        <button class="slds-button slds-button_brand slds-button_stretch pay-button" onclick={handlePayNow} disabled={isPayDisabled}>
+                            Pay Now
+                        </button>
+                    </div>
+                </template>
+
+                <template if:false={hasOutstanding}>
+                    <div class="no-outstanding-alert" role="alert">
+                        <lightning-icon icon-name="utility:success" size="small" variant="success" class="slds-m-right_x-small"></lightning-icon>
+                        <span>No outstanding balance. Invoices are paid.</span>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Aadhaar_Last_4_Validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(NOT(ISBLANK(Aadhaar_Last_4__c)), NOT(REGEX(Aadhaar_Last_4__c, &quot;[0-9]{4}&quot;)))</errorConditionFormula>
+    <errorDisplayField>Aadhaar_Last_4__c</errorDisplayField>
+    <errorMessage>Aadhaar last 4 must be exactly 4 digits.</errorMessage>
+</ValidationRule>

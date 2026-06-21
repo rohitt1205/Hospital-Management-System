@@ -1,0 +1,18 @@
+# Salesforce DX
+.sf/
+.sfdx/
+.localSourceTracking/
+
+# OS/IDE temporary files
+.DS_Store
+.vscode/
+.idea/
+
+# HMS specific log files and temporary folders
+*.log
+scratch/
+agentforce/
+PH_Patient_Helpdesk_Service_Agent_Preview_*.json
+07L*.log
+output/
+tmp/

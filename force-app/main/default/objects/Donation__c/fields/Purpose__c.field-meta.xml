@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Purpose__c</fullName>
+    <label>Purpose</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Blood</fullName>
+                <default>false</default>
+                <label>Blood</label>
+            </value>
+            <value>
+                <fullName>Plasma</fullName>
+                <default>false</default>
+                <label>Plasma</label>
+            </value>
+            <value>
+                <fullName>Platelets</fullName>
+                <default>false</default>
+                <label>Platelets</label>
+            </value>
+            <value>
+                <fullName>Organ</fullName>
+                <default>false</default>
+                <label>Organ</label>
+            </value>
+            <value>
+                <fullName>Bone Marrow</fullName>
+                <default>false</default>
+                <label>Bone Marrow</label>
+            </value>
+            <value>
+                <fullName>Blood Donation Camp</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Blood Donation Camp</label>
+            </value>
+            <value>
+                <fullName>Charity Care</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Charity Care</label>
+            </value>
+            <value>
+                <fullName>Equipment</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Equipment</label>
+            </value>
+            <value>
+                <fullName>General Fund</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>General Fund</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

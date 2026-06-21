@@ -1,0 +1,99 @@
+<template>
+    <div class="qa-wrapper">
+        <div class="qa-header">
+            <lightning-icon icon-name="utility:zap" size="small" class="qa-header-icon"></lightning-icon>
+            <h2 class="qa-title">Quick Actions</h2>
+            <p class="qa-subtitle">Launch hospital workflows instantly</p>
+        </div>
+
+        <div class="qa-grid">
+            <!-- New Appointment -->
+            <div class="qa-card qa-appointment" onclick={launchAppointmentFlow} role="button" tabindex="0"
+                 onkeypress={handleKeyPress} data-flow="HMS_New_Appointment">
+                <div class="qa-card-icon">
+                    <lightning-icon icon-name="standard:event" size="large"></lightning-icon>
+                </div>
+                <div class="qa-card-body">
+                    <div class="qa-card-title">New Appointment</div>
+                    <div class="qa-card-desc">Schedule a patient consultation with a doctor</div>
+                </div>
+                <div class="qa-card-arrow">
+                    <lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+                </div>
+                <div class="qa-card-pulse"></div>
+            </div>
+
+            <!-- New Admission -->
+            <div class="qa-card qa-admission" onclick={launchAdmissionFlow} role="button" tabindex="0"
+                 onkeypress={handleKeyPress} data-flow="HMS_New_Admission">
+                <div class="qa-card-icon">
+                    <lightning-icon icon-name="standard:incident" size="large"></lightning-icon>
+                </div>
+                <div class="qa-card-body">
+                    <div class="qa-card-title">New Admission</div>
+                    <div class="qa-card-desc">Admit a patient with bed selection</div>
+                </div>
+                <div class="qa-card-arrow">
+                    <lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+                </div>
+                <div class="qa-card-pulse"></div>
+            </div>
+
+            <!-- Bed Allocation -->
+            <div class="qa-card qa-bed" onclick={launchBedFlow} role="button" tabindex="0"
+                 onkeypress={handleKeyPress} data-flow="HMS_Bed_Allocation">
+                <div class="qa-card-icon">
+                    <lightning-icon icon-name="standard:resource_preference" size="large"></lightning-icon>
+                </div>
+                <div class="qa-card-body">
+                    <div class="qa-card-title">Bed Allocation</div>
+                    <div class="qa-card-desc">Reassign or change bed for admitted patient</div>
+                </div>
+                <div class="qa-card-arrow">
+                    <lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+                </div>
+                <div class="qa-card-pulse"></div>
+            </div>
+
+            <!-- Generate Invoice -->
+            <div class="qa-card qa-invoice" onclick={launchInvoiceFlow} role="button" tabindex="0"
+                 onkeypress={handleKeyPress} data-flow="HMS_Generate_Invoice">
+                <div class="qa-card-icon">
+                    <lightning-icon icon-name="standard:opportunity" size="large"></lightning-icon>
+                </div>
+                <div class="qa-card-body">
+                    <div class="qa-card-title">View Invoice</div>
+                    <div class="qa-card-desc">Search patient and preview invoice details</div>
+                </div>
+                <div class="qa-card-arrow">
+                    <lightning-icon icon-name="utility:chevronright" size="x-small"></lightning-icon>
+                </div>
+                <div class="qa-card-pulse"></div>
+            </div>
+        </div>
+
+        <!-- Flow Modal -->
+        <template if:true={isFlowOpen}>
+            <div class="flow-backdrop" onclick={handleBackdropClick}>
+                <div class="flow-modal" onclick={stopPropagation}>
+                    <div class="flow-modal-header">
+                        <span class="flow-modal-title">{activeFlowLabel}</span>
+                        <lightning-button-icon
+                            icon-name="utility:close"
+                            variant="bare-inverse"
+                            onclick={closeFlow}
+                            class="flow-close-btn"
+                            alternative-text="Close">
+                        </lightning-button-icon>
+                    </div>
+                    <div class="flow-modal-body">
+                        <lightning-flow
+                            flow-api-name={activeFlowName}
+                            onstatuschange={handleFlowStatusChange}>
+                        </lightning-flow>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

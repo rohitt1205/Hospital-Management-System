@@ -1,0 +1,28 @@
+{
+  "required" : [ "requestType" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "requestType" : {
+      "title" : "Request Type",
+      "description" : "Use exactly Service Request, Department, Doctor, Facility, Admission Fee, Insurance, Subsidy, or Hospital Info.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "searchTerm" : {
+      "title" : "Search Term",
+      "description" : "Optional exact department, doctor, ward, room type, or insurance company named by the user.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "informationType" : {
+      "title" : "Information Type",
+      "description" : "For Service Request use Appointment or Admission. For Hospital Info use Timings, Location, Contact, or Ambulance.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

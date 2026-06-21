@@ -1,0 +1,35 @@
+{
+  "required" : [ "firstQuestion", "category" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "firstQuestion" : {
+      "title" : "First Question",
+      "description" : "The original first substantive question in this conversation.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "category" : {
+      "title" : "Category",
+      "description" : "Use Appointment, Admission, or General according to the routing rules.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "patientId" : {
+      "title" : "Patient Id",
+      "description" : "Optional authenticated patient record Id. Leave blank for visitors.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : true,
+      "copilotAction:isUserInput" : false
+    },
+    "conversationKey" : {
+      "title" : "Conversation Key",
+      "description" : "Use the Messaging Session RoutableId from agent context. Never ask the user for it.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

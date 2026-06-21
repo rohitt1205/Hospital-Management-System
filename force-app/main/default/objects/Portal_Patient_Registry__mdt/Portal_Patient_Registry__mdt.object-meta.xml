@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Canonical portal Username to Patient__c mapping. Survives manual edits to Portal_User__c or Email__c on the patient record.</description>
+    <label>Portal Patient Registry</label>
+    <pluralLabel>Portal Patient Registries</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Guide users who want to take, book, schedule, arrange, or start an appointment or admission, then create one helpdesk request only after confirmation.</description>
+    <developerName>p_16jg5000000dMNF_Patient_Service_Requests</developerName>
+    <genAiFunctions>
+        <functionName>PH_Create_Ticket_Once</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>PH_Hospital_Directory</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>Handle only an explicit intent to take, book, schedule, create, request, arrange, or start an appointment or admission. Never list all doctors and never treat this as a doctor-directory question.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>At the start, do not create a ticket. Call Patient Helpdesk Hospital Directory with requestType Service Request and informationType Appointment or Admission. Present the returned options and ask the user to choose Reception, Online, Emergency/Direct, or Doctor Referral.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>1</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>After the user chooses a channel, repeat the selected channel and ask: Shall I submit this helpdesk request? Do not call Create Patient Helpdesk Ticket Once until the user explicitly answers yes, confirm, proceed, or equivalent.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>2</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>After explicit confirmation only, call Create Patient Helpdesk Ticket Once. Use category Appointment or Admission. Set firstQuestion to the original request followed by Preferred channel: and the selected channel. Pass $Context.RoutableId as conversationKey when available. After success respond exactly: Your helpdesk request has been submitted. Our services team will contact you soon.</description>
+        <developerName>instruction_3</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_3</masterLabel>
+        <sortOrder>3</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>If the user declines, do not create a ticket. Do not collect medical symptoms, patient records, billing details, or other confidential information. Never create Appointment, Admission, Patient, or clinical records.</description>
+        <developerName>instruction_4</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_4</masterLabel>
+        <sortOrder>4</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jg5000000dMNF_Patient_Service_Requests</localDeveloperName>
+    <masterLabel>Patient Service Requests</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is only to guide users who want to take, book, schedule, create, request, arrange, or start an appointment or admission. Offer Reception, Online, Emergency/Direct, and Doctor Referral, ask for a choice, ask for confirmation, and only then create one helpdesk request. You never create appointment or admission records.</scope>
+</GenAiPlugin>

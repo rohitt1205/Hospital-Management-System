@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bed_Price_Validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISCHANGED( Daily_Rate__c )</errorConditionFormula>
+    <errorDisplayField>Daily_Rate__c</errorDisplayField>
+    <errorMessage>Daily Rate is fixed</errorMessage>
+</ValidationRule>

@@ -1,0 +1,69 @@
+<template>
+    <lightning-card title="Assign Emergency Doctor" icon-name="standard:service_appointment">
+        <template if:true={loading}>
+            <div class="slds-p-around_medium">
+                <lightning-spinner size="small" alternative-text="Loading"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={loading}>
+            <template if:true={showPanel}>
+                <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+                    <dl class="slds-list_horizontal slds-wrap summary">
+                        <dt class="slds-item_label slds-truncate">Admission</dt>
+                        <dd class="slds-item_detail slds-truncate">{context.admissionName}</dd>
+                        <dt class="slds-item_label slds-truncate">Patient</dt>
+                        <dd class="slds-item_detail slds-truncate">{patientDisplay}</dd>
+                        <dt class="slds-item_label slds-truncate">Phone</dt>
+                        <dd class="slds-item_detail slds-truncate">{phoneDisplay}</dd>
+                        <dt class="slds-item_label slds-truncate">Department</dt>
+                        <dd class="slds-item_detail slds-truncate">{departmentDisplay}</dd>
+                        <dt class="slds-item_label slds-truncate">SLA</dt>
+                        <dd class="slds-item_detail slds-truncate">{slaDisplay}</dd>
+                    </dl>
+
+                    <template if:true={hasAssignedDoctor}>
+                        <div class="slds-notify slds-notify_alert slds-theme_success slds-m-top_medium" role="status">
+                            <span>Assigned to {context.currentDoctorName}.</span>
+                        </div>
+                    </template>
+
+                    <template if:false={hasAssignedDoctor}>
+                        <lightning-combobox
+                            class="slds-m-top_medium"
+                            name="doctor"
+                            label="Doctor"
+                            value={selectedDoctorId}
+                            options={doctorOptions}
+                            placeholder="Select a doctor"
+                            onchange={handleDoctorChange}
+                            disabled={disableDoctorSelection}>
+                        </lightning-combobox>
+
+                        <template if:true={context.message}>
+                            <p class="slds-text-color_weak slds-m-top_small">{context.message}</p>
+                        </template>
+
+                        <lightning-button
+                            class="slds-m-top_medium"
+                            variant="brand"
+                            label="Assign Doctor"
+                            onclick={handleAssign}
+                            disabled={assignDisabled}>
+                        </lightning-button>
+                        <lightning-button
+                            class="slds-m-top_medium slds-m-left_small"
+                            variant="neutral"
+                            label="Add Doctor"
+                            onclick={handleAddDoctor}>
+                        </lightning-button>
+                    </template>
+                </div>
+            </template>
+
+            <template if:false={showPanel}>
+                <p class="slds-p-around_medium slds-text-color_weak">{notApplicableMessage}</p>
+            </template>
+        </template>
+    </lightning-card>
+</template>

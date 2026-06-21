@@ -1,0 +1,49 @@
+{
+  "required" : [ "appointmentId", "newAppointmentDate", "newAppointmentTime" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "appointmentId" : {
+      "title" : "Appointment Id",
+      "description" : "From list output",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "newAppointmentDate" : {
+      "title" : "New Appointment Date",
+      "description" : "YYYY-MM-DD",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "newAppointmentTime" : {
+      "title" : "New Appointment Time",
+      "description" : "morning/afternoon/evening or HH:MM",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "newDoctorId" : {
+      "title" : "New Doctor Id",
+      "description" : "Leave blank",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "newSlotLabel" : {
+      "title" : "New Slot Label",
+      "description" : "Leave blank",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "portalUserId" : {
+      "title" : "Portal User Id",
+      "description" : "Authenticated patient User Id from customerId. Mapped automatically.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

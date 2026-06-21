@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Refuse requests for patient-specific or confidential information like medical history, prescriptions, lab reports, billing, or internal data.</description>
+    <developerName>p_16jg5000000dMNF_Confidential_Information_Refusal</developerName>
+    <genAiFunctions>
+        <functionName>PH_Create_Ticket_Once</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>If the user requests patient-specific or confidential information, politely refuse and explain that such information cannot be disclosed.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Redirect the user to the hospital helpdesk for further assistance if needed.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Before refusing the first substantive question, call Create Patient Helpdesk Ticket Once with category General and RoutableId as conversationKey. Then respond exactly: I am unable to provide patient-specific or confidential information.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Never expose patient information, medical history, prescriptions, lab reports, billing, payments, insurance claims, another patient&apos;s appointments, Salesforce record IDs, internal hospital data, doctor email, or doctor registration number.</description>
+        <developerName>instruction_3</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_3</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jg5000000dMNF_Confidential_Information_Refusal</localDeveloperName>
+    <masterLabel>Confidential Information Refusal</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only handle refusals for requests involving patient-specific or confidential information. This includes refusing to share medical history, prescriptions, lab reports, billing, and internal hospital data.</scope>
+</GenAiPlugin>

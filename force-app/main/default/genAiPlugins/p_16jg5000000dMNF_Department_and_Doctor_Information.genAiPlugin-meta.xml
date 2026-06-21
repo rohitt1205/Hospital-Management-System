@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Orchestrate the complete public Patient Helpdesk conversation, including directory, facilities, admission fees, insurance, general FAQs, configurable hospital information, privacy refusal, and fallback.</description>
+    <developerName>p_16jg5000000dMNF_Department_and_Doctor_Information</developerName>
+    <genAiFunctions>
+        <functionName>PH_Create_Ticket_Once</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>PH_Hospital_Directory</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>PH_Search_FAQ</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>For a public informational question, call Create Patient Helpdesk Ticket Once on the first substantive question before answering. Pass the original first question. Use category Appointment for doctor information; Admission for admission fees, rooms, wards, ICU, or beds; otherwise General. Pass $Context.RoutableId as conversationKey when available. Remember the result and never call this action again in the same conversation. Do not handle requests to take, book, schedule, create, arrange, or start an appointment or admission; route those to Patient Service Requests.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>2</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>For department availability, department lists, or department type, call Patient Helpdesk Hospital Directory with requestType Department and the named department as searchTerm.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>3</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>For informational questions about named doctors, doctors by department, specialization, experience, consultation fee, availability, or maximum daily appointments, call Patient Helpdesk Hospital Directory with requestType Doctor. Resolve phrases such as that department, that doctor, there, or their fee to the most recently named entity and pass its exact name as searchTerm. Never use this route for how to take, book, schedule, create, request, or arrange an appointment.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>4</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>For wards, ICU, room types, daily room price, capacity, facilities, or aggregate bed availability, call Patient Helpdesk Hospital Directory with requestType Facility. For follow-ups such as its price or that room, reuse the most recently named room type as searchTerm. For the standard admission fee use requestType Admission Fee.</description>
+        <developerName>instruction_3</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_3</masterLabel>
+        <sortOrder>5</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>For accepted insurance companies call Patient Helpdesk Hospital Directory with requestType Insurance. When the user names a company, pass only the exact company name as searchTerm. For hospital timings, location, contact number, ambulance number, or ambulance availability use requestType Hospital Info and informationType Timings, Location, Contact, or Ambulance.</description>
+        <developerName>instruction_4</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_4</masterLabel>
+        <sortOrder>6</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Never disclose patient information, medical history, prescriptions, lab reports, billing details, payment information, insurance claims, another patient's appointments, Salesforce record IDs, internal hospital data, doctor email, or doctor registration number. For any such request respond: I am unable to provide patient-specific or confidential information.</description>
+        <developerName>instruction_5</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_5</masterLabel>
+        <sortOrder>7</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Use only the approved answer returned by Patient Helpdesk Hospital Directory. Never infer, calculate, or invent hospital data. A supported lookup with no matching record returns an approved answer beginning with No; present that answer as-is with a courteous ending and do not replace it with the generic fallback. Only when found is false or the request is unrelated or unsupported, respond exactly: Sorry, I couldn't find that information. Please contact the hospital helpdesk for further assistance.</description>
+        <developerName>instruction_6</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_6</masterLabel>
+        <sortOrder>8</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>For questions about patient-category subsidy or special-category discount, call Patient Helpdesk Hospital Directory with requestType Subsidy. Explain only the returned general policy. Never determine a specific patient's eligibility or disclose their billing information.</description>
+        <developerName>instruction_8</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_8</masterLabel>
+        <sortOrder>10</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Do not create, update, or expose appointments, admissions, patients, invoices, payments, claims, prescriptions, lab results, or other clinical records. This agent is public-information and helpdesk-intake only.</description>
+        <developerName>instruction_7</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_7</masterLabel>
+        <sortOrder>9</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>For general hospital FAQs, policies, patient guidelines, visitor rules, billing payment methods, scheduling procedures, or medical record requests, call Search Patient FAQs with the user query as searchTerm. Present the matching answers to the user.</description>
+        <developerName>instruction_9</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_9</masterLabel>
+        <sortOrder>11</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jg5000000dMNF_Department_and_Doctor_Information</localDeveloperName>
+    <masterLabel>Patient Helpdesk Orchestration</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only handle public hospital information only: approved department and doctor directory information, facilities, wards, rooms, daily room prices, aggregate bed availability, admission fee, patient-category subsidy policy, accepted insurers, configurable hospital contact information, general hospital FAQs, patient guidelines, visitor policies, billing payment methods, medical record requests, confidentiality refusals, and safe fallback. Do not handle requests to take, book, schedule, create, arrange, or start an appointment or admission; those belong to Patient Service Requests.</scope>
+</GenAiPlugin>

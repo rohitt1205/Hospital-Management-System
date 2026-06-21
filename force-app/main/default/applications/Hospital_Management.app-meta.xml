@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Custom Hospital Management System app for staff, doctors, billing, pharmacy, lab, and patient-service operations.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Hospital Management</label>
+    <navType>Standard</navType>
+    <tabs>HMS_Home_Page</tabs>
+    <tabs>Patient__c</tabs>
+    <tabs>Appointment__c</tabs>
+    <tabs>Admission__c</tabs>
+    <tabs>Doctor__c</tabs>
+    <tabs>Guardian__c</tabs>
+    <tabs>Ward__c</tabs>
+    <tabs>Room__c</tabs>
+    <tabs>Bed_Allocation__c</tabs>
+    <tabs>Medical_Record__c</tabs>
+    <tabs>Clinical_Service__c</tabs>
+    <tabs>Patient_Service__c</tabs>
+    <tabs>Medicine__c</tabs>
+    <tabs>Prescription__c</tabs>
+    <tabs>Insurance_Company__c</tabs>
+    <tabs>Insurance_Policy__c</tabs>
+    <tabs>Invoice__c</tabs>
+    <tabs>Payment__c</tabs>
+    <tabs>Final_Report__c</tabs>
+    <tabs>Donation__c</tabs>
+    <tabs>Helpdesk_Ticket__c</tabs>
+    <tabs>Staff__c</tabs>
+    <tabs>Staff_Attendance__c</tabs>
+    <tabs>Payroll__c</tabs>
+    <tabs>Lab_Test__c</tabs>
+    <tabs>Lab_Result__c</tabs>
+    <tabs>Department__c</tabs>
+    <tabs>FAQ__c</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

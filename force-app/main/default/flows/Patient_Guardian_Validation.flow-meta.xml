@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>Error_Guardian_Required</name>
+        <label>Guardian Required Error</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <customErrorMessages>
+            <errorMessage>Guardian is mandatory for minor patients.</errorMessage>
+            <fieldSelection>Guardian__c</fieldSelection>
+            <isFieldError>true</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Check_Minor_Without_Guardian</name>
+        <label>Minor Without Guardian?</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <defaultConnectorLabel>Valid — Allow Save</defaultConnectorLabel>
+        <rules>
+            <name>Minor_Missing_Guardian</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Date_of_Birth__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Date_of_Birth__c</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>formulaEighteenYearsAgo</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Guardian__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Error_Guardian_Required</targetReference>
+            </connector>
+            <label>Minor With No Guardian — Block</label>
+        </rules>
+    </decisions>
+    <description>Before Save flow on Patient__c. Validates that minor patients (under 18 based on Date of Birth) must have a Guardian assigned before the record is saved. Throws a field-level error on Guardian__c if the condition is violated.</description>
+    <formulas>
+        <name>formulaEighteenYearsAgo</name>
+        <dataType>Date</dataType>
+        <expression>ADDMONTHS(TODAY(), -216)</expression>
+    </formulas>
+    <interviewLabel>Patient Guardian Validation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Patient Guardian Validation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_Minor_Without_Guardian</targetReference>
+        </connector>
+        <object>Patient__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

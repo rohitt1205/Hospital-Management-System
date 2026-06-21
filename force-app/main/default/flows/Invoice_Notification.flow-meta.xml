@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Invoice_Notification</name>
+        <label>Send Invoice Notification</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>SendWhatsAppNotification</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>messageBody</name>
+            <value>
+                <elementReference>Inovice_message</elementReference>
+                <inputConfiguratorMode>Resource</inputConfiguratorMode>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>phoneNumber</name>
+            <value>
+                <elementReference>Get_Patient.Phone__c</elementReference>
+                <inputConfiguratorMode>Resource</inputConfiguratorMode>
+            </value>
+        </inputParameters>
+        <nameSegment>SendWhatsAppNotification</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Invoice_Changed</name>
+        <label>Invoice Changed?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>PaymentOrStatusChanged</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Payment_Status__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record__Prior.Payment_Status__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Patient</targetReference>
+            </connector>
+            <label>PaymentOrStatusChanged</label>
+        </rules>
+        <rules>
+            <name>Patient_Discharged</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Admission__r.Actual_Discharge_Date_Time__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record__Prior.Admission__r.Actual_Discharge_Date_Time__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Patient</targetReference>
+            </connector>
+            <label>Patient Discharged</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>Inovice_message</name>
+        <dataType>String</dataType>
+        <expression>&quot;💳 Hospital Invoice Update&quot; &amp;
+
+BR() &amp; BR() &amp;
+
+&quot;Invoice Number: &quot; &amp; {!$Record.Name} &amp;
+
+BR() &amp;
+&quot;Patient: &quot; &amp; {!Get_Patient.Name} &amp;
+
+BR() &amp;
+&quot;Invoice Date: &quot; &amp;
+TEXT($Record.Invoice_Date__c) &amp;
+
+BR() &amp;
+&quot;Gross Amount: ₹&quot; &amp;
+TEXT(BLANKVALUE($Record.Gross_Amount__c * 92, 0)) &amp;
+
+BR() &amp;
+&quot;Insurance Covered: ₹&quot; &amp;
+TEXT(BLANKVALUE($Record.Insurance_Covered_Amount__c * 92, 0)) &amp;
+
+BR() &amp;
+&quot;Subsidy Covered: ₹&quot; &amp;
+TEXT(BLANKVALUE($Record.Discount_Amount__c * 92, 0)) &amp;
+
+BR() &amp;
+&quot;Non-Billable Deduction: ₹&quot; &amp;
+TEXT(BLANKVALUE($Record.Non_Billable_Deduction__c * 92, 0)) &amp;
+
+BR() &amp;
+&quot;Net Amount: ₹&quot; &amp;
+TEXT(BLANKVALUE($Record.Net_Amount__c * 92, 0)) &amp;
+
+BR() &amp;
+&quot;Net Payable: ₹&quot; &amp;
+TEXT(BLANKVALUE($Record.Net_Payable__c * 92, 0)) &amp;
+
+BR() &amp;
+&quot;Payment Status: &quot; &amp;
+TEXT($Record.Payment_Status__c) &amp;
+
+BR() &amp; BR() &amp;
+&quot;Thank you for choosing our hospital.&quot;</expression>
+    </formulas>
+    <interviewLabel>Invoice Notification {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Invoice Notification</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Patient</name>
+        <label>Get Patient</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Send_Invoice_Notification</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Patient__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Patient__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Invoice_Changed</targetReference>
+        </connector>
+        <object>Invoice__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

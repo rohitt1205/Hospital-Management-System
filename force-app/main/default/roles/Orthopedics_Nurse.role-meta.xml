@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Role xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseAccessLevel>Edit</caseAccessLevel>
+    <contactAccessLevel>Edit</contactAccessLevel>
+    <mayForecastManagerShare>false</mayForecastManagerShare>
+    <name>Orthopedics_Nurse</name>
+    <opportunityAccessLevel>Edit</opportunityAccessLevel>
+    <parentRole>Orthopedics_Doctor</parentRole>
+</Role>

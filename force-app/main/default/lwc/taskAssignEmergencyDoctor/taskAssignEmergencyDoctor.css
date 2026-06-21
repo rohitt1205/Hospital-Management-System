@@ -1,0 +1,9 @@
+.summary dt {
+    width: 7rem;
+    color: var(--lwc-colorTextLabel, #444);
+    font-weight: 600;
+}
+
+.summary dd {
+    width: calc(100% - 7rem);
+}

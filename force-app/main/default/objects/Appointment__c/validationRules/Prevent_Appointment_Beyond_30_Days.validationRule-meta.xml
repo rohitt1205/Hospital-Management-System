@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Appointment_Beyond_30_Days</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(OR(ISNEW(), ISCHANGED(Appointment_Date__c)), Appointment_Date__c &gt; TODAY() + 365)</errorConditionFormula>
+    <errorDisplayField>Appointment_Date__c</errorDisplayField>
+    <errorMessage>Appointment date cannot be more than 365 days from today.</errorMessage>
+</ValidationRule>

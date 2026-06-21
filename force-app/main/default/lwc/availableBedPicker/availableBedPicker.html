@@ -1,0 +1,15 @@
+<template>
+    <lightning-combobox
+        name="availableBed"
+        label="Bed Number"
+        value={selectedBedNumber}
+        placeholder={placeholder}
+        options={options}
+        onchange={handleChange}
+        disabled={isDisabled}
+        required>
+    </lightning-combobox>
+    <template if:true={hasNoBeds}>
+        <div class="slds-text-color_error slds-m-top_x-small">No beds are available in this room.</div>
+    </template>
+</template>

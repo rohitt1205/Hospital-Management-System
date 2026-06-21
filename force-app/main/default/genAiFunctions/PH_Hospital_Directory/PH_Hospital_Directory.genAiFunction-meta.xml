@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Returns only approved public hospital directory information. Never returns patient information, record IDs, doctor email, or registration number.</description>
+    <developerName>PH_Hospital_Directory</developerName>
+    <invocationTarget>PH_HospitalDirectoryAction</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>PH_Hospital_Directory</localDeveloperName>
+    <masterLabel>Patient Helpdesk Hospital Directory</masterLabel>
+    <progressIndicatorMessage>Checking approved hospital information</progressIndicatorMessage>
+</GenAiFunction>

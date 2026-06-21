@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Generate_Discharge_PDF</name>
+        <label>Generate Discharge Summary PDF</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <actionName>DischargeSummaryHandler</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Patient_Email_Exists</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>admissionId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>DischargeSummaryHandler</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Discharge_Email_To_Patient</name>
+        <label>Send Discharge Email to Doctor</label>
+        <locationX>176</locationX>
+        <locationY>480</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <faultConnector>
+            <targetReference>Email_Fault_Bypass</targetReference>
+        </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Doctor__r.Staff__r.Email__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Discharge Summary — {!$Record.Name} — Patient: {!$Record.Patient__r.Name}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>varEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Build_Email_Body</name>
+        <label>Build Discharge Email Body</label>
+        <locationX>176</locationX>
+        <locationY>360</locationY>
+        <assignmentItems>
+            <assignToReference>varEmailBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Dear Dr. {!$Record.Doctor__r.Name},
+
+Patient {!$Record.Patient__r.Name} has been discharged from our hospital. Please find their discharge summary details below:
+
+─────────────────────────────────────
+  DISCHARGE SUMMARY
+─────────────────────────────────────
+  Admission Number  : {!$Record.Name}
+  Patient Name      : {!$Record.Patient__r.Name}
+  Diagnosis         : {!$Record.Diagnosis__c}
+  Ward              : {!$Record.Ward__r.Name}
+  Attending Doctor  : {!$Record.Doctor__r.Name}
+  Bill Amount       : {!$Record.Bill_Amount__c}
+  Payment Due Date  : {!$Record.Payment_Due_Date__c}
+  Discharge Date    : {!$Record.Discharge_Date__c}
+─────────────────────────────────────
+
+A PDF discharge summary has been attached to the patient&apos;s admission record.
+
+Warm regards,
+Hospital Management Team</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Discharge_Email_To_Patient</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Email_Fault_Bypass</name>
+        <label>Email Fault Bypass</label>
+        <locationX>300</locationX>
+        <locationY>480</locationY>
+        <assignmentItems>
+            <assignToReference>varEmailBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>varEmailBody</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Is_Status_Changed_To_Discharged</name>
+        <label>Status Changed to Discharged?</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <defaultConnectorLabel>No Change — Skip</defaultConnectorLabel>
+        <rules>
+            <name>Status_Just_Changed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record__Prior.Status__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Generate_Discharge_PDF</targetReference>
+            </connector>
+            <label>Yes — Process Discharge</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Patient_Email_Exists</name>
+        <label>Doctor Email Exists?</label>
+        <locationX>176</locationX>
+        <locationY>300</locationY>
+        <defaultConnectorLabel>No Email — End</defaultConnectorLabel>
+        <rules>
+            <name>Has_Email</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Doctor__r.Staff__r.Email__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Build_Email_Body</targetReference>
+            </connector>
+            <label>Email Available — Send</label>
+        </rules>
+    </decisions>
+    <description>After Update flow on Admission__c. When Status__c changes to Discharged: generates a discharge summary PDF via Apex invocable action, then sends an email to the patient containing Diagnosis, Ward, Doctor, Bill Amount, and Payment Due Date.</description>
+    <interviewLabel>Discharge Processing {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Discharge Processing</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Patient_For_Email</name>
+        <label>Get Patient Details</label>
+        <locationX>176</locationX>
+        <locationY>300</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Patient_Email_Exists</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Patient__c</elementReference>
+            </value>
+        </filters>
+        <object>Patient__c</object>
+        <outputReference>varPatient</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Email__c</queriedFields>
+    </recordLookups>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Status_Changed_To_Discharged</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Discharged</stringValue>
+            </value>
+        </filters>
+        <object>Admission__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varEmailBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varPatient</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Patient__c</objectType>
+    </variables>
+</Flow>

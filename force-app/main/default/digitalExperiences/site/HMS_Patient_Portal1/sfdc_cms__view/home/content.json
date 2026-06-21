@@ -1,0 +1,73 @@
+{
+  "type" : "sfdc_cms__view",
+  "title" : "Home",
+  "contentBody" : {
+    "component" : {
+      "children" : [ {
+        "children" : [ {
+          "attributes" : {
+            "backgroundImageConfig" : "",
+            "backgroundImageOverlay" : "rgba(0,0,0,0)",
+            "componentSpacerSize" : "",
+            "dxpStyle" : { },
+            "layoutDirectionDesktop" : "row",
+            "layoutDirectionMobile" : "column",
+            "layoutDirectionTablet" : "column",
+            "maxContentWidth" : "",
+            "sectionColumnGutterWidth" : "",
+            "sectionConfig" : "{\"UUID\":\"d88bfa5d-b055-4f2e-834e-a7bffbdcd434\",\"columns\":[{\"UUID\":\"accdd471-4014-4377-a307-366311fc0a8f\",\"columnName\":\"Column 1\",\"columnKey\":\"col1\",\"columnWidth\":\"12\",\"seedComponents\":null}]}",
+            "sectionMinHeight" : "",
+            "sectionVerticalAlign" : "flex-start"
+          },
+          "children" : [ {
+            "children" : [ {
+              "attributes" : {
+                "dxpStyle" : { },
+                "imageInfos" : "",
+                "richTextValue" : "<div style=\"text-align:center;padding:48px;font-family:Arial,sans-serif;\"><p>Redirecting to Hospital Patient Portal...</p><script>window.location.replace('https://orgfarm-721f288b1d-dev-ed.develop.my.site.com/s/');</script></div>"
+              },
+              "definition" : "community_builder:htmlEditor",
+              "id" : "c3d4e5f6-a7b8-9012-cdef-345678901234",
+              "type" : "component"
+            } ],
+            "id" : "accdd471-4014-4377-a307-366311fc0a8f",
+            "name" : "col1",
+            "title" : "Column 1",
+            "type" : "region"
+          } ],
+          "definition" : "community_layout:section",
+          "id" : "d88bfa5d-b055-4f2e-834e-a7bffbdcd434",
+          "type" : "component"
+        } ],
+        "id" : "c769a3f0-bcba-4363-af42-10973fb21ef5",
+        "name" : "content",
+        "title" : "Content",
+        "type" : "region"
+      }, {
+        "children" : [ {
+          "attributes" : {
+            "customHeadTags" : "",
+            "description" : "",
+            "dxpStyle" : { },
+            "pageTitle" : "Home",
+            "recordId" : "{!recordId}"
+          },
+          "definition" : "community_builder:seoAssistant",
+          "id" : "f20c85bf-e359-4699-9d67-77f34e4abbde",
+          "type" : "component"
+        } ],
+        "id" : "aa55624f-9918-4737-9cd0-23a242dbc48a",
+        "name" : "sfdcHiddenRegion",
+        "title" : "sfdcHiddenRegion",
+        "type" : "region"
+      } ],
+      "definition" : "community_layout:sldsFlexibleLayout",
+      "id" : "a1da59bb-81a5-45d3-b912-a1a84bf07ba3",
+      "type" : "component"
+    },
+    "dataProviders" : [ ],
+    "themeLayoutType" : "Inner",
+    "viewType" : "home"
+  },
+  "urlName" : "home"
+}

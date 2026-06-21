@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bed_Type__c</fullName>
+    <label>Bed Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Normal</fullName>
+                <default>false</default>
+                <label>Normal</label>
+            </value>
+            <value>
+                <fullName>Non AC</fullName>
+                <default>false</default>
+                <label>Non AC</label>
+            </value>
+            <value>
+                <fullName>AC</fullName>
+                <default>false</default>
+                <label>AC</label>
+            </value>
+            <value>
+                <fullName>With Washroom</fullName>
+                <default>false</default>
+                <label>With Washroom</label>
+            </value>
+            <value>
+                <fullName>ICU</fullName>
+                <default>false</default>
+                <label>ICU</label>
+            </value>
+            <value>
+                <fullName>Emergency</fullName>
+                <default>false</default>
+                <label>Emergency</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

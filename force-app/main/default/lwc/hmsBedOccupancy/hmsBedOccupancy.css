@@ -1,0 +1,170 @@
+/* ── HMS Bed Occupancy ───────────────────────────────────────────────────── */
+:host { display: block; }
+
+.bo-wrapper {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 22px 24px;
+    box-shadow: 0 10px 30px rgba(30, 41, 59, 0.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.bo-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bo-hdr-icon { --lwc-colorTextIconDefault: #2563eb; }
+.bo-title { font-size: 1rem; font-weight: 700; color: #0f172a; margin: 0 0 3px 0; }
+.bo-subtitle { font-size: 0.75rem; color: #475569; margin: 0; }
+
+/* ── Summary Strip ───────────────────────────────────────────────────────── */
+.bo-summary-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 14px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.bo-summary-item { text-align: center; }
+
+.bo-sum-val {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.bo-sum-val.occupied  { color: #dc2626; }
+.bo-sum-val.available { color: #166534; }
+
+.bo-sum-lbl {
+    font-size: 0.68rem;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.bo-summary-sep {
+    width: 1px;
+    height: 36px;
+    background: #cbd5e1;
+}
+
+/* ── Ward List ───────────────────────────────────────────────────────────── */
+.bo-ward-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow-y: auto;
+    max-height: 320px;
+    padding-right: 4px;
+}
+
+.bo-ward-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bo-ward-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bo-ward-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.bo-ward-pct {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* ── Progress Bar ────────────────────────────────────────────────────────── */
+.bo-bar-bg {
+    width: 100%;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.bo-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    min-width: 4px;
+}
+
+.bo-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    animation: barShine 2s ease-in-out infinite;
+}
+
+@keyframes barShine {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+/* ── Ward Detail ─────────────────────────────────────────────────────────── */
+.bo-ward-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+}
+
+.bo-det-occ { color: #b91c1c; font-weight: 600; }
+.bo-det-avl { color: #475569; }
+
+/* ── Empty ───────────────────────────────────────────────────────────────── */
+.bo-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    gap: 12px;
+    color: #64748b;
+}
+.empty-icon { --lwc-colorTextIconDefault: #cbd5e1; }
+.bo-empty p { margin: 0; font-size: 0.9rem; }
+
+/* ── Skeleton ────────────────────────────────────────────────────────────── */
+.skeleton-rows { display: flex; flex-direction: column; gap: 18px; }
+.skeleton-row {
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.03) 25%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.03) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.bo-ward-list::-webkit-scrollbar { width: 4px; }
+.bo-ward-list::-webkit-scrollbar-track { background: transparent; }
+.bo-ward-list::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 4px; }

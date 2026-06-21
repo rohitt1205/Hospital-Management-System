@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Expected_Discharge_Validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>Expected_Discharge_Date_Time__c &lt; Admission_Date_Time__c</errorConditionFormula>
+    <errorDisplayField>Expected_Discharge_Date_Time__c</errorDisplayField>
+    <errorMessage>Expected Discharge date can&apos;t be in the past.</errorMessage>
+</ValidationRule>

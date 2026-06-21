@@ -1,0 +1,70 @@
+<template>
+    <div class="bo-wrapper">
+        <!-- Header -->
+        <div class="bo-header">
+            <lightning-icon icon-name="standard:resource_preference" size="small" class="bo-hdr-icon"></lightning-icon>
+            <div>
+                <h2 class="bo-title">Bed Occupancy</h2>
+                <p class="bo-subtitle">Real-time ward capacity overview</p>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="skeleton-rows">
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+            </div>
+        </template>
+
+        <!-- Summary Strip -->
+        <template if:false={isLoading}>
+            <div class="bo-summary-strip">
+                <div class="bo-summary-item">
+                    <div class="bo-sum-val">{totalBeds}</div>
+                    <div class="bo-sum-lbl">Total</div>
+                </div>
+                <div class="bo-summary-sep"></div>
+                <div class="bo-summary-item">
+                    <div class="bo-sum-val occupied">{totalOccupied}</div>
+                    <div class="bo-sum-lbl">Occupied</div>
+                </div>
+                <div class="bo-summary-sep"></div>
+                <div class="bo-summary-item">
+                    <div class="bo-sum-val available">{totalAvailable}</div>
+                    <div class="bo-sum-lbl">Available</div>
+                </div>
+            </div>
+
+            <!-- Ward Rows -->
+            <template if:true={isEmpty}>
+                <div class="bo-empty">
+                    <lightning-icon icon-name="utility:all" size="large" class="empty-icon"></lightning-icon>
+                    <p>No ward data available</p>
+                </div>
+            </template>
+
+            <template if:false={isEmpty}>
+                <div class="bo-ward-list">
+                    <template for:each={wards} for:item="w">
+                        <div key={w.id} class="bo-ward-row">
+                            <div class="bo-ward-top">
+                                <span class="bo-ward-name">{w.wardName}</span>
+                                <span class="bo-ward-pct" style={w.pctStyle}>{w.occupancyPercent}%</span>
+                            </div>
+                            <div class="bo-bar-bg">
+                                <div class="bo-bar-fill" style={w.barStyle}></div>
+                            </div>
+                            <div class="bo-ward-detail">
+                                <span class="bo-det-occ">{w.occupiedBeds} occupied</span>
+                                <span class="bo-det-avl">{w.availableBeds} available / {w.totalBeds} total</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,21 @@
+{
+  "required" : [ "appointmentId" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "appointmentId" : {
+      "title" : "Appointment Id",
+      "description" : "From list output",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "portalUserId" : {
+      "title" : "Portal User Id",
+      "description" : "Authenticated patient User Id from customerId. Mapped automatically.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

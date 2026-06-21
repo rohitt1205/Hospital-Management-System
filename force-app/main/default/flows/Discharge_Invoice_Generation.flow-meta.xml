@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Generate_Discharge_Invoice</name>
+        <label>Generate Discharge Invoice</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <actionName>BillingInvoiceHandler</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>admissionId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>BillingInvoiceHandler</nameSegment>
+    </actionCalls>
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Is_Status_Changed_To_Discharged</name>
+        <label>Status Actually Changed?</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <defaultConnectorLabel>No Change — Skip</defaultConnectorLabel>
+        <rules>
+            <name>Status_Just_Changed_To_Discharged</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record__Prior.Status__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Generate_Discharge_Invoice</targetReference>
+            </connector>
+            <label>Yes — Changed to Discharged</label>
+        </rules>
+    </decisions>
+    <description>After Update flow on Admission__c. When Status__c changes to Discharged: invokes BillingInvoiceHandler Apex class to calculate all charges (Stay + Procedure + Lab + Medicine - Insurance - Non-Billable), create an Invoice__c record, and create Invoice_Line_Item__c records for each charge category.</description>
+    <interviewLabel>Discharge Invoice Generation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Discharge Invoice Generation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Status_Changed_To_Discharged</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Discharged</stringValue>
+            </value>
+        </filters>
+        <object>Admission__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

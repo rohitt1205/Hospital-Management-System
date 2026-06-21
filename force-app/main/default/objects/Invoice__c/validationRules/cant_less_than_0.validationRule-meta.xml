@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cant_less_than_0</fullName>
+    <active>true</active>
+    <errorConditionFormula>Net_Payable__c &lt; 0</errorConditionFormula>
+    <errorDisplayField>Net_Payable__c</errorDisplayField>
+    <errorMessage>Net Payable cant be less than 0</errorMessage>
+</ValidationRule>

@@ -1,0 +1,65 @@
+<template>
+    <div class="rp-wrapper">
+        <div class="rp-header">
+            <div class="rp-header-left">
+                <lightning-icon icon-name="standard:patient" size="small" class="rp-hdr-icon"></lightning-icon>
+                <div>
+                    <h2 class="rp-title">Recent Patients</h2>
+                    <p class="rp-subtitle">Last 10 registered patients</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Skeleton -->
+        <template if:true={isLoading}>
+            <div class="skeleton-rows">
+                <template for:each={skeletonRows} for:item="s">
+                    <div key={s} class="skeleton-row"></div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Patient List -->
+        <template if:false={isLoading}>
+            <template if:true={isEmpty}>
+                <div class="rp-empty">
+                    <lightning-icon icon-name="utility:people" size="large" class="empty-icon"></lightning-icon>
+                    <p>No patient records found</p>
+                </div>
+            </template>
+            <template if:false={isEmpty}>
+                <div class="rp-list">
+                    <template for:each={patients} for:item="p">
+                        <div key={p.id} class="rp-row" onclick={navigateToRecord} data-id={p.id}>
+                            <!-- Avatar -->
+                            <div class={p.avatarClass}>
+                                <span class="avatar-initial">{p.initial}</span>
+                            </div>
+                            <!-- Info -->
+                            <div class="rp-info">
+                                <div class="rp-name">{p.name}</div>
+                                <div class="rp-meta">
+                                    <span class="rp-gender">{p.gender}</span>
+                                    <template if:true={p.bloodGroup}>
+                                        <span class="meta-sep">·</span>
+                                        <span class="rp-blood">{p.bloodGroup}</span>
+                                    </template>
+                                    <template if:true={p.phone}>
+                                        <span class="meta-sep">·</span>
+                                        <span>{p.phone}</span>
+                                    </template>
+                                </div>
+                            </div>
+                            <!-- Status Badge -->
+                            <span class={p.statusClass}>{p.status}</span>
+                            <!-- Arrow -->
+                            <div class="rp-arrow">
+                                <lightning-icon icon-name="utility:chevronright" size="xx-small"></lightning-icon>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

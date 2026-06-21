@@ -1,0 +1,176 @@
+<template>
+    <section class="portal-shell">
+        <template if:true={summary}>
+            <nav class="patient-nav" aria-label="Patient portal navigation">
+                <a href="#appointments">Appointments</a>
+                <a href="#reports">Reports</a>
+                <a href="#payments">Payments</a>
+                <a href="#insurance">Insurance</a>
+            </nav>
+
+            <div class="hero">
+                <div>
+                    <p class="eyebrow">HMS Patient Portal</p>
+                    <h1>{summary.patientName}</h1>
+                    <div class="patient-meta">
+                        <span>{summary.patientId}</span>
+                        <span>{summary.category}</span>
+                        <span>{summary.status}</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a class="primary-action" href="/s/appointment__c/Default">Book Appointment</a>
+                    <a class="secondary-action" href="/s/invoice__c/Default">View Bills</a>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <article class="metric">
+                    <lightning-icon icon-name="utility:event" size="small"></lightning-icon>
+                    <div>
+                        <span>{summary.appointmentCount}</span>
+                        <p>Appointments</p>
+                    </div>
+                </article>
+                <article class="metric">
+                    <lightning-icon icon-name="utility:record" size="small"></lightning-icon>
+                    <div>
+                        <span>{summary.reportCount}</span>
+                        <p>Reports</p>
+                    </div>
+                </article>
+                <article class="metric">
+                    <lightning-icon icon-name="utility:moneybag" size="small"></lightning-icon>
+                    <div>
+                        <span>{formattedPendingAmount}</span>
+                        <p>Pending Amount</p>
+                    </div>
+                </article>
+                <article class="metric">
+                    <lightning-icon icon-name="utility:shield" size="small"></lightning-icon>
+                    <div>
+                        <span>{insuranceStatus}</span>
+                        <p>Insurance</p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="content-grid">
+                <section class="panel wide" id="appointments">
+                    <header>
+                        <div>
+                            <p class="section-kicker">Care Schedule</p>
+                            <h2>Appointments</h2>
+                        </div>
+                        <a href="/s/appointment__c/Default">Open</a>
+                    </header>
+                    <template if:true={hasAppointments}>
+                        <div class="list">
+                            <template for:each={summary.appointments} for:item="appointment">
+                                <article key={appointment.numberValue} class="row">
+                                    <div class="row-icon">
+                                        <lightning-icon icon-name="utility:date_time" size="x-small"></lightning-icon>
+                                    </div>
+                                    <div>
+                                        <h3>{appointment.numberValue}</h3>
+                                        <p>{appointment.departmentName} with {appointment.doctorName}</p>
+                                    </div>
+                                    <span class="pill">{appointment.status}</span>
+                                </article>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={hasAppointments}>
+                        <p class="empty">No appointments available.</p>
+                    </template>
+                </section>
+
+                <section class="panel" id="reports">
+                    <header>
+                        <div>
+                            <p class="section-kicker">Clinical Timeline</p>
+                            <h2>Reports</h2>
+                        </div>
+                        <a href="/s/final_report__c/Default">Open</a>
+                    </header>
+                    <template if:true={hasReports}>
+                        <div class="list compact">
+                            <template for:each={summary.reports} for:item="report">
+                                <article key={report.numberValue} class="row">
+                                    <div>
+                                        <h3>{report.reportType}</h3>
+                                        <p>{report.numberValue} - {report.status}</p>
+                                    </div>
+                                </article>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={hasReports}>
+                        <p class="empty">No reports available.</p>
+                    </template>
+                </section>
+
+                <section class="panel" id="payments">
+                    <header>
+                        <div>
+                            <p class="section-kicker">Billing</p>
+                            <h2>Payments</h2>
+                        </div>
+                        <a href="/s/invoice__c/Default">Open</a>
+                    </header>
+                    <template if:true={hasInvoices}>
+                        <div class="list compact">
+                            <template for:each={summary.invoices} for:item="invoice">
+                                <article key={invoice.numberValue} class="row">
+                                    <div>
+                                        <h3>{invoice.numberValue}</h3>
+                                        <p>{invoice.paymentStatus} - {invoice.netPayable}</p>
+                                    </div>
+                                </article>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={hasInvoices}>
+                        <p class="empty">No invoices available.</p>
+                    </template>
+                </section>
+
+                <section class="panel wide" id="insurance">
+                    <header>
+                        <div>
+                            <p class="section-kicker">Coverage</p>
+                            <h2>Insurance Details</h2>
+                        </div>
+                        <a href="/s/insurance_policy__c/Default">Open</a>
+                    </header>
+                    <template if:true={hasInsurance}>
+                        <div class="insurance-grid">
+                            <template for:each={summary.insurancePolicies} for:item="policy">
+                                <article key={policy.policyNumber} class="policy">
+                                    <div>
+                                        <h3>{policy.companyName}</h3>
+                                        <p>{policy.policyNumber} - {policy.planType}</p>
+                                    </div>
+                                    <div class="policy-meta">
+                                        <span>{policy.verificationStatus}</span>
+                                        <span>Valid to {policy.validTo}</span>
+                                    </div>
+                                </article>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={hasInsurance}>
+                        <p class="empty">No insurance details available.</p>
+                    </template>
+                </section>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-state">
+                <h2>Portal data is not available</h2>
+                <p>{error}</p>
+            </div>
+        </template>
+    </section>
+</template>

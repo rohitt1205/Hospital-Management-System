@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Searches the hospital FAQ database for general patient questions and answers covering topics like Billing, Admissions, Appointments, Emergency, and Visitors.</description>
+    <developerName>PH_Search_FAQ</developerName>
+    <invocationTarget>PH_SearchFAQAction</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>PH_Search_FAQ</localDeveloperName>
+    <masterLabel>Search Patient FAQs</masterLabel>
+    <progressIndicatorMessage>Searching patient FAQs...</progressIndicatorMessage>
+</GenAiFunction>

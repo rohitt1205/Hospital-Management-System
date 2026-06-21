@@ -1,0 +1,75 @@
+<template>
+    <div class="apt-wrapper">
+        <!-- Header -->
+        <div class="apt-header">
+            <div class="apt-header-left">
+                <lightning-icon icon-name="standard:event" size="small" class="apt-hdr-icon"></lightning-icon>
+                <div>
+                    <h2 class="apt-title">Today's Appointments</h2>
+                    <p class="apt-subtitle">{appointmentCountLabel}</p>
+                </div>
+            </div>
+            <div class="apt-filter-row">
+                <span class="filter-pill {filterAllClass}"    onclick={filterAll}>All</span>
+                <span class="filter-pill {filterSchedClass}"  onclick={filterScheduled}>Scheduled</span>
+                <span class="filter-pill {filterDoneClass}"   onclick={filterCompleted}>Completed</span>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="skeleton-rows">
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+            </div>
+        </template>
+
+        <!-- Empty State -->
+        <template if:false={isLoading}>
+            <template if:true={isEmpty}>
+                <div class="apt-empty">
+                    <lightning-icon icon-name="utility:date_time" size="large" class="empty-icon"></lightning-icon>
+                    <p>No appointments today</p>
+                </div>
+            </template>
+
+            <!-- Appointments List -->
+            <template if:false={isEmpty}>
+                <div class="apt-list">
+                    <template for:each={filteredAppointments} for:item="apt">
+                        <div key={apt.id} class="apt-row" onclick={navigateToRecord} data-id={apt.id}>
+                            <!-- Time Badge -->
+                            <div class="apt-time">
+                                <span class="apt-hour">{apt.timeHour}</span>
+                                <span class="apt-ampm">{apt.timeAmPm}</span>
+                            </div>
+                            <!-- Info -->
+                            <div class="apt-info">
+                                <div class="apt-patient">{apt.patientName}</div>
+                                <div class="apt-meta">
+                                    <lightning-icon icon-name="utility:user" size="xx-small" class="meta-icon"></lightning-icon>
+                                    <span>{apt.doctorName}</span>
+                                    <span class="meta-sep">·</span>
+                                    <lightning-icon icon-name="utility:location" size="xx-small" class="meta-icon"></lightning-icon>
+                                    <span>{apt.department}</span>
+                                </div>
+                            </div>
+                            <!-- Status & Priority -->
+                            <div class="apt-badges">
+                                <span class={apt.statusClass}>{apt.status}</span>
+                                <template if:true={apt.isUrgent}>
+                                    <span class="badge-urgent">URGENT</span>
+                                </template>
+                            </div>
+                            <!-- Chevron -->
+                            <div class="apt-chevron">
+                                <lightning-icon icon-name="utility:chevronright" size="xx-small"></lightning-icon>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,224 @@
+<apex:page showHeader="false" standardStylesheets="false" applyBodyTag="false" docType="html-5.0" contentType="text/html">
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HMS – Secure Payment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            padding: 40px 30px;
+            max-width: 420px;
+            width: 100%;
+        }
+        .logo { font-size: 42px; margin-bottom: 16px; }
+        .title { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #e2e8f0; }
+        .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 32px; }
+        .card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+        .amount-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .amount-value { font-size: 36px; font-weight: 800; color: #38bdf8; }
+        .status-box { padding: 16px; border-radius: 12px; margin-top: 20px; font-size: 14px; font-weight: 600; }
+        .status-loading { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; }
+        .status-success { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+        .status-error   { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+        .spinner {
+            width: 32px; height: 32px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .close-btn {
+            margin-top: 20px;
+            padding: 12px 28px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+        }
+        .secure-badge { font-size: 11px; color: #64748b; margin-top: 16px; }
+    </style>
+</head>
+<body>
+
+<script>
+    function getParam(name) {
+        try {
+            return new URL(window.location.href).searchParams.get(name) || '';
+        } catch(e) { return ''; }
+    }
+    function getPaymentContext() {
+        var payload = getParam('payload');
+        if (payload) {
+            try { return JSON.parse(payload); }
+            catch (e) { console.error('Invalid payment context', e); }
+        }
+
+        // Preserve compatibility with already-open links from the previous launcher.
+        return {
+            keyId: getParam('keyId'),
+            patientName: getParam('patientName'),
+            patientEmail: getParam('patientEmail'),
+            patientPhone: getParam('patientPhone'),
+            invoiceId: getParam('invoiceId'),
+            invoiceName: getParam('invoiceName'),
+            patientId: getParam('patientId'),
+            paymentMode: getParam('paymentMode'),
+            orderId: getParam('orderId'),
+            amountPaise: getParam('amountPaise'),
+            displayAmount: getParam('displayAmount')
+        };
+    }
+    var PAYMENT_CONTEXT = getPaymentContext();
+    var KEY_ID          = PAYMENT_CONTEXT.keyId || '';
+    var PATIENT_NAME    = PAYMENT_CONTEXT.patientName || '';
+    var EMAIL           = PAYMENT_CONTEXT.patientEmail || '';
+    var PHONE           = PAYMENT_CONTEXT.patientPhone || '';
+    var INVOICE_ID      = PAYMENT_CONTEXT.invoiceId || '';
+    var INVOICE_NAME    = PAYMENT_CONTEXT.invoiceName || '';
+    var PATIENT_ID      = PAYMENT_CONTEXT.patientId || '';
+    var PAY_MODE        = PAYMENT_CONTEXT.paymentMode || '';
+    var ORDER_ID        = PAYMENT_CONTEXT.orderId || '';
+    var AMOUNT_PAISE    = parseInt(PAYMENT_CONTEXT.amountPaise, 10);
+    var DISPLAY_AMOUNT  = PAYMENT_CONTEXT.displayAmount || '';
+</script>
+
+<div class="container">
+    <div class="logo">🏥</div>
+    <div class="title">HMS Secure Payment</div>
+    <div class="subtitle">Powered by Razorpay · 256-bit SSL Encrypted</div>
+    <div class="card">
+        <div class="amount-label">Amount Payable</div>
+        <div class="amount-value">&#8377;<span id="amountValue"></span></div>
+    </div>
+    <div id="statusBox" class="status-box status-loading">
+        <div class="spinner" id="spinner"></div>
+        <div id="statusText">Initialising secure payment gateway…</div>
+    </div>
+    <button class="close-btn" id="closeBtn" onclick="window.close()">Close Window</button>
+    <div class="secure-badge">🔒 Your payment is secured by Razorpay</div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    function setStatus(msg, type) {
+        var box = document.getElementById('statusBox');
+        var txt = document.getElementById('statusText');
+        var sp  = document.getElementById('spinner');
+        box.className = 'status-box status-' + type;
+        txt.textContent = msg;
+        if (type !== 'loading') {
+            if (sp) sp.style.display = 'none';
+            document.getElementById('closeBtn').style.display = 'inline-block';
+        }
+    }
+
+    function sendMsg(data) {
+        try { if (window.opener) window.opener.postMessage(data, '*'); }
+        catch(e) { console.error('postMessage error', e); }
+    }
+
+    window.onload = function() {
+        document.getElementById('amountValue').textContent =
+            Number(DISPLAY_AMOUNT || (AMOUNT_PAISE / 100) || 0).toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+        if (!KEY_ID || KEY_ID === 'rzp_test_dummyKeyId') {
+            setStatus('Payment gateway key not configured. Contact administrator.', 'error');
+            sendMsg({ type: 'RAZORPAY_ERROR', message: 'Key not configured' });
+            return;
+        }
+        if (typeof Razorpay === 'undefined') {
+            setStatus('Could not load Razorpay SDK. Check your internet connection.', 'error');
+            sendMsg({ type: 'RAZORPAY_ERROR', message: 'SDK load failed' });
+            return;
+        }
+        if (!ORDER_ID || !AMOUNT_PAISE || AMOUNT_PAISE <= 0) {
+            setStatus('Payment order or amount is invalid. Please close this window and try again.', 'error');
+            sendMsg({ type: 'RAZORPAY_ERROR', message: 'Invalid payment order' });
+            return;
+        }
+
+        var options = {
+            key:         KEY_ID,
+            amount:      AMOUNT_PAISE,
+            currency:    'INR',
+            name:        'HMS Hospital',
+            description: 'Invoice ' + (INVOICE_NAME || INVOICE_ID || 'N/A'),
+            order_id:    ORDER_ID,
+            prefill: {
+                name:    PATIENT_NAME,
+                email:   EMAIL,
+                contact: PHONE
+            },
+            notes: {
+                patient_id: PATIENT_ID,
+                invoice_id: INVOICE_ID,
+                pay_mode:   PAY_MODE
+            },
+            theme: { color: '#1589EE' },
+            handler: function(response) {
+                setStatus('Payment Successful! Updating records…', 'success');
+                sendMsg({
+                    type:        'RAZORPAY_SUCCESS',
+                    paymentId:   response.razorpay_payment_id,
+                    orderId:     response.razorpay_order_id,
+                    signature:   response.razorpay_signature,
+                    patientId:   PATIENT_ID,
+                    invoiceId:   INVOICE_ID,
+                    paymentMode: PAY_MODE
+                });
+                setTimeout(function() { window.close(); }, 2500);
+            },
+            modal: {
+                ondismiss: function() {
+                    setStatus('Payment was cancelled.', 'error');
+                    sendMsg({ type: 'RAZORPAY_CANCELLED' });
+                }
+            }
+        };
+
+        try {
+            setStatus('Opening payment window…', 'loading');
+            var rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(resp) {
+                var errMsg = (resp.error && resp.error.description) ? resp.error.description : 'Unknown';
+                setStatus('Payment failed: ' + errMsg, 'error');
+                sendMsg({ type: 'RAZORPAY_ERROR', message: errMsg });
+            });
+            rzp.open();
+            setStatus('Complete your payment in the Razorpay window.', 'loading');
+        } catch(e) {
+            setStatus('Error: ' + e.message, 'error');
+            sendMsg({ type: 'RAZORPAY_ERROR', message: e.message });
+        }
+    };
+</script>
+</body>
+</html>
+</apex:page>

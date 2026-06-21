@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Room_Number_Cannot_Exceed_Ward_Capacity</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  NOT(ISNEW()),
+  NOT(ISBLANK(Ward__c)),
+  IF(ISNUMBER(Name), VALUE(Name) &gt; Ward__r.Capacity__c,
+    VALUE(
+      IF(AND(LEN(Name) &gt;= 4, CONTAINS("0123456789", MID(Name, LEN(Name) - 3, 1))), RIGHT(Name, 4),
+        IF(AND(LEN(Name) &gt;= 3, CONTAINS("0123456789", MID(Name, LEN(Name) - 2, 1))), RIGHT(Name, 3),
+          IF(AND(LEN(Name) &gt;= 2, CONTAINS("0123456789", MID(Name, LEN(Name) - 1, 1))), RIGHT(Name, 2),
+            IF(AND(LEN(Name) &gt;= 1, CONTAINS("0123456789", RIGHT(Name, 1))), RIGHT(Name, 1),
+              "0"
+            )
+          )
+        )
+      )
+    ) &gt; Ward__r.Capacity__c
+  )
+)</errorConditionFormula>
+    <errorDisplayField>Name</errorDisplayField>
+    <errorMessage>Room number cannot exceed the room capacity of the assigned ward.</errorMessage>
+</ValidationRule>

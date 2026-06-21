@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>Error_Ward_Full</name>
+        <label>Ward Full Error</label>
+        <locationX>176</locationX>
+        <locationY>480</locationY>
+        <customErrorMessages>
+            <errorMessage>Ward is full. Admission cannot proceed.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Ward_Full_Check</name>
+        <label>Ward At Capacity?</label>
+        <locationX>176</locationX>
+        <locationY>360</locationY>
+        <defaultConnectorLabel>Capacity Available — Allow</defaultConnectorLabel>
+        <rules>
+            <name>Ward_Is_Full</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varWard.Current_Occupancy__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>varWard.Capacity__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Error_Ward_Full</targetReference>
+            </connector>
+            <label>Full — Block Admission</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Ward_Provided_Check</name>
+        <label>Ward Selected on Admission?</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <defaultConnectorLabel>No Ward — Skip Check</defaultConnectorLabel>
+        <rules>
+            <name>Ward_Provided</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Ward__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Ward_Record</targetReference>
+            </connector>
+            <label>Ward Present — Validate</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Ward_Record_Found</name>
+        <label>Ward Record Found?</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <defaultConnectorLabel>Ward Not Found — Allow</defaultConnectorLabel>
+        <rules>
+            <name>Ward_Exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varWard</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Ward_Full_Check</targetReference>
+            </connector>
+            <label>Ward Found — Check Capacity</label>
+        </rules>
+    </decisions>
+    <description>Before Save flow on Admission__c (Create only). Looks up the related Ward__c record and checks if Current_Occupancy__c is greater than or equal to Capacity__c. If the ward is full, throws a record-level error to block the save.</description>
+    <interviewLabel>Ward Capacity Check {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Ward Capacity Check</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Ward_Record</name>
+        <label>Get Ward Record</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Ward_Record_Found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Ward__c</elementReference>
+            </value>
+        </filters>
+        <object>Ward__c</object>
+        <outputReference>varWard</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Current_Occupancy__c</queriedFields>
+        <queriedFields>Capacity__c</queriedFields>
+    </recordLookups>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Ward_Provided_Check</targetReference>
+        </connector>
+        <object>Admission__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varWard</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Ward__c</objectType>
+    </variables>
+</Flow>

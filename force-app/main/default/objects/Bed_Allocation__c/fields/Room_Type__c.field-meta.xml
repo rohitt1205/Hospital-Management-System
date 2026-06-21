@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Room_Type__c</fullName>
+    <label>Room Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>shared non ac room without extra bed</fullName>
+                <default>false</default>
+                <label>shared non ac room without extra bed</label>
+            </value>
+            <value>
+                <fullName>Private non ac room with extra bed</fullName>
+                <default>false</default>
+                <label>Private non ac room with extra bed</label>
+            </value>
+            <value>
+                <fullName>Shared Non AC Room with extra bed</fullName>
+                <default>false</default>
+                <label>Shared Non AC Room with extra bed</label>
+            </value>
+            <value>
+                <fullName>shared Ac room with extra bed</fullName>
+                <default>false</default>
+                <label>shared Ac room with extra bed</label>
+            </value>
+            <value>
+                <fullName>shared ac room without extra bed</fullName>
+                <default>false</default>
+                <label>shared ac room without extra bed</label>
+            </value>
+            <value>
+                <fullName>private ac room without extra bed</fullName>
+                <default>false</default>
+                <label>private ac room without extra bed</label>
+            </value>
+            <value>
+                <fullName>private non ac room without extra bed</fullName>
+                <default>false</default>
+                <label>private non ac room without extra bed</label>
+            </value>
+            <value>
+                <fullName>private ac room with extra bed</fullName>
+                <default>false</default>
+                <label>private ac room with extra bed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
