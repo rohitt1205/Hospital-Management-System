@@ -1,0 +1,44 @@
+<template>
+    <template if:true={isOnlineAppointment}>
+        <lightning-card class="zoom-card slds-p-around_medium">
+            <div class="zoom-container slds-align_absolute-center slds-grid slds-grid_vertical">
+                <div class="slds-m-bottom_medium slds-text-align_center">
+                    <lightning-icon 
+                        icon-name="utility:video" 
+                        size="medium" 
+                        alternative-text="Video Call" 
+                        class="zoom-icon">
+                    </lightning-icon>
+                    <h2 class="zoom-title slds-m-top_small">{titleText}</h2>
+                </div>
+
+                <template if:true={isBeforeTime}>
+                    <div class="slds-text-align_center zoom-status-msg pending">
+                        <span class="dot pending-dot"></span>
+                        Meeting will start at <strong>{formattedAppointmentTime}</strong>
+                    </div>
+                </template>
+
+                <template if:false={isBeforeTime}>
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading Meeting Details" size="small"></lightning-spinner>
+                    </template>
+                    
+                    <template if:false={isLoading}>
+                        <template if:true={meetingUrl}>
+                            <button class="zoom-button" onclick={handleJoinClick}>
+                                {buttonLabel}
+                            </button>
+                        </template>
+                        <template if:false={meetingUrl}>
+                            <div class="slds-text-align_center zoom-status-msg error">
+                                <span class="dot error-dot"></span>
+                                Zoom Link is being generated or is unavailable. Please refresh or contact support.
+                            </div>
+                        </template>
+                    </template>
+                </template>
+            </div>
+        </lightning-card>
+    </template>
+</template>
