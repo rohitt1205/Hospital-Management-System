@@ -71,9 +71,32 @@
                                     <div class="row-icon">
                                         <lightning-icon icon-name="utility:date_time" size="x-small"></lightning-icon>
                                     </div>
-                                    <div>
+                                    <div class="row-details">
                                         <h3>{appointment.numberValue}</h3>
                                         <p>{appointment.departmentName} with {appointment.doctorName}</p>
+                                        
+                                        <!-- Zoom Consultation Info -->
+                                        <template if:true={appointment.isOnline}>
+                                            <div class="zoom-portal-msg">
+                                                <template if:true={appointment.showPendingMessage}>
+                                                    <span class="zoom-status-text pending">
+                                                        🎥 Video Consultation starts at {appointment.formattedTime}
+                                                    </span>
+                                                </template>
+                                                <template if:true={appointment.showJoinButton}>
+                                                    <a href={appointment.joinUrl} target="_blank" class="zoom-join-button">
+                                                        🔑 Join Video Consultation
+                                                    </a>
+                                                </template>
+                                                <template if:false={appointment.joinUrl}>
+                                                    <template if:false={appointment.showPendingMessage}>
+                                                        <span class="zoom-status-text error">
+                                                            🎥 Zoom Link generating... Please refresh in a moment
+                                                        </span>
+                                                    </template>
+                                                </template>
+                                            </div>
+                                        </template>
                                     </div>
                                     <span class="pill">{appointment.status}</span>
                                 </article>

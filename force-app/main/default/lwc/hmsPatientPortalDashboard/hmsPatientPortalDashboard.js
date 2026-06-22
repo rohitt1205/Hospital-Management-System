@@ -8,8 +8,44 @@ export default class HmsPatientPortalDashboard extends LightningElement {
     @wire(getPortalSummaryJson)
     wiredSummary({ data, error }) {
         if (data) {
-            this.summary = JSON.parse(data);
-            this.error = undefined;
+            try {
+                const parsedData = JSON.parse(data);
+                if (parsedData.appointments) {
+                    const now = new Date().getTime();
+                    parsedData.appointments = parsedData.appointments.map(app => {
+                        const isOnline = app.appointmentType === 'Online' || app.appointmentType === 'Teleconsultation';
+                        const apptTime = app.appointmentDateTime ? new Date(app.appointmentDateTime).getTime() : 0;
+                        const isBeforeTime = now < apptTime;
+                        
+                        // Format date time for display
+                        let formattedTime = '';
+                        if (app.appointmentDateTime) {
+                            const d = new Date(app.appointmentDateTime);
+                            formattedTime = d.toLocaleString([], {
+                                weekday: 'short',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        
+                        return {
+                            ...app,
+                            isOnline,
+                            isBeforeTime,
+                            formattedTime,
+                            showJoinButton: isOnline && !isBeforeTime && app.joinUrl,
+                            showPendingMessage: isOnline && isBeforeTime
+                        };
+                    });
+                }
+                this.summary = parsedData;
+                this.error = undefined;
+            } catch (err) {
+                console.error('Error parsing dashboard summary:', err);
+                this.error = 'Error loading patient portal dashboard data.';
+            }
         } else if (error) {
             this.summary = undefined;
             this.error = error.body && error.body.message ? error.body.message : 'Unable to load patient data.';

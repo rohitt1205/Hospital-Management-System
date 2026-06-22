@@ -5,6 +5,10 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>HMS_ZoomController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>PH_SearchFAQAction</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -218,21 +222,13 @@
         <field>Audit_Log__c.Record_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Bed_Allocation__c.Admission__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Bed_Allocation__c.Allocation_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Bed_Allocation__c.Bed_Number__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Bed_Allocation__c.Bed__c</field>
@@ -253,11 +249,7 @@
         <field>Bed_Allocation__c.Room_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Bed_Allocation__c.Room__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Bed_Allocation__c.Status__c</field>
@@ -428,11 +420,7 @@
         <field>Doctor__c.Consultation_Fee__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Doctor__c.Department__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Doctor__c.Email__c</field>
@@ -443,11 +431,7 @@
         <field>Doctor__c.Max_Daily_Appointments__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Doctor__c.Registration_Number__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Doctor__c.Specialization__c</field>
@@ -608,16 +592,8 @@
         <field>Insurance_Company__c.Claim_API_Enabled__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Insurance_Company__c.Company_Type__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Insurance_Company__c.Standard_Discount__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Insurance_Company__c.Support_Phone__c</field>
@@ -1233,29 +1209,63 @@
         <field>Staff__c.Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Ward__c.Capacity__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Ward__c.Department__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
+
+
     <fieldPermissions>
         <editable>true</editable>
         <field>Ward__c.Floor__c</field>
         <readable>true</readable>
     </fieldPermissions>
+
+
     <fieldPermissions>
         <editable>true</editable>
-        <field>Ward__c.Status__c</field>
+        <field>Appointment__c.Appointment_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Ward__c.Ward_Type__c</field>
+        <field>Meeting__c.Appointment__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Duration__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Join_URL__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Meeting_ID__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Meeting__c.Patient_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Start_Time__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Start_URL__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Meeting__c.Topic__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
@@ -1620,6 +1630,16 @@
         <viewAllFields>false</viewAllFields>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>Meeting__c</object>
+        <viewAllFields>false</viewAllFields>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
     <recordTypeVisibilities>
         <recordType>Admission__c.From_Appointment</recordType>
         <visible>true</visible>
@@ -1738,6 +1758,10 @@
     </tabSettings>
     <tabSettings>
         <tab>Ward__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Meeting__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <userPermissions>

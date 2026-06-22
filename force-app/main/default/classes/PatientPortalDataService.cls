@@ -72,9 +72,10 @@ public without sharing class PatientPortalDataService {
         Datetime now = Datetime.now();
         Date today = Date.today();
         for (Appointment__c appointment : [
-            SELECT Name, Appointment_Date_Time__c, Appointment_Date__c, Status__c,
+            SELECT Id, Name, Appointment_Date_Time__c, Appointment_Date__c, Status__c,
                    Priority__c, Appointment_Type__c, Symptoms__c, Source__c,
-                   Doctor__r.Name, Department__r.Name
+                   Doctor__r.Name, Department__r.Name,
+                   (SELECT Join_URL__c FROM Meeting_Logs__r ORDER BY CreatedDate DESC LIMIT 1)
             FROM Appointment__c
             WHERE Patient__c = :patientId
             WITH SYSTEM_MODE
@@ -84,7 +85,12 @@ public without sharing class PatientPortalDataService {
             if (isUpcoming) {
                 upcoming++;
             }
+            String joinUrlVal = null;
+            if (appointment.Meeting_Logs__r != null && !appointment.Meeting_Logs__r.isEmpty()) {
+                joinUrlVal = appointment.Meeting_Logs__r[0].Join_URL__c;
+            }
             appointments.add(new Map<String, Object>{
+                'recordId' => appointment.Id,
                 'numberValue' => appointment.Name,
                 'doctorName' => appointment.Doctor__r != null ? appointment.Doctor__r.Name : 'To be assigned',
                 'departmentName' => appointment.Department__r != null ? appointment.Department__r.Name : 'Hospital Care',
@@ -95,7 +101,8 @@ public without sharing class PatientPortalDataService {
                 'priority' => appointment.Priority__c,
                 'symptoms' => appointment.Symptoms__c,
                 'source' => appointment.Source__c,
-                'upcoming' => isUpcoming
+                'upcoming' => isUpcoming,
+                'joinUrl' => joinUrlVal
             });
         }
         summary.put('appointments', appointments);
@@ -253,6 +260,26 @@ public without sharing class PatientPortalDataService {
         }
         summary.put('insurancePolicies', policies);
         summary.put('insuranceCount', policies.size());
+    }
+
+    public static List<Map<String, Object>> getPatientFaqs() {
+        List<Map<String, Object>> result = new List<Map<String, Object>>();
+        for (FAQ__c faq : [
+            SELECT Id, Name, Question__c, Answer__c, Category__c
+            FROM FAQ__c
+            WHERE Is_Active__c = true
+            WITH SYSTEM_MODE
+            ORDER BY Category__c ASC NULLS LAST, Name ASC
+            LIMIT 200
+        ]) {
+            result.add(new Map<String, Object>{
+                'id' => faq.Id,
+                'question' => String.isNotBlank(faq.Question__c) ? faq.Question__c : faq.Name,
+                'answer' => faq.Answer__c != null ? faq.Answer__c : '',
+                'category' => faq.Category__c != null ? faq.Category__c : 'General'
+            });
+        }
+        return result;
     }
 
     private static Integer calculateAge(Date dob) {
