@@ -110,6 +110,14 @@
         <relatedList>Medical_Record__c.Appointment__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>NAME</fields>
+        <fields>Topic__c</fields>
+        <fields>Start_Time__c</fields>
+        <fields>Status__c</fields>
+        <relatedList>Meeting__c.Appointment__c</relatedList>
+    </relatedLists>
+
+    <relatedLists>
         <fields>CreatedDate</fields>
         <fields>StepStatus</fields>
         <fields>OriginalActor</fields>

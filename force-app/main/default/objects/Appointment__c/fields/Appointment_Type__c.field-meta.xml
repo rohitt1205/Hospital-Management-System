@@ -30,6 +30,17 @@
                 <default>false</default>
                 <label>Emergency Consultation</label>
             </value>
+            <value>
+                <fullName>In-Person</fullName>
+                <default>false</default>
+                <label>In-Person</label>
+            </value>
+            <value>
+                <fullName>Online</fullName>
+                <default>false</default>
+                <label>Online</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
+
